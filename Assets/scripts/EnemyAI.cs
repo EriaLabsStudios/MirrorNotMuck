@@ -19,6 +19,8 @@ public class EnemyAI : NetworkBehaviour
 
     void Update()
     {
+        if (!isServer) return;
+
         // Buscar al jugador si no se ha asignado una referencia
         if (player == null)
         {
