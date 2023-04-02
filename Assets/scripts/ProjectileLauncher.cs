@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 public class ProjectileLauncher : NetworkBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private GameObject cubePrefabTest;
     private Camera playerCamera;
     [SerializeField] private float minLaunchForce = 500f;
     [SerializeField] private float maxLaunchForce = 3000f;
@@ -48,6 +49,11 @@ public class ProjectileLauncher : NetworkBehaviour
         {
             LaunchProjectile();
         }
+
+        if (Input.GetMouseButton(0))
+        {
+            CmdDropCube();
+        }
     }
     void InitializeCamera()
     {
@@ -62,20 +68,57 @@ public class ProjectileLauncher : NetworkBehaviour
             Debug.LogError("No se encontró una cámara en los hijos del objeto.");
         }
     }
+
+
     void LaunchProjectile()
     {
         float chargePercentage = Mathf.Clamp01(timeKeyPressed / chargeTime);
         float launchForce = Mathf.Lerp(minLaunchForce, maxLaunchForce, chargePercentage);
 
-        Vector3 spawnPosition = playerCamera.transform.position + playerCamera.transform.forward;
-        Quaternion spawnRotation = playerCamera.transform.rotation;
 
-        GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, spawnRotation);
+        Transform ts = playerCamera.transform;
+        Vector3 spawnPosition = playerCamera.transform.position + playerCamera.transform.forward;
+        Vector3 lookDirection = playerCamera.transform.rotation * Vector3.forward;
+
+        CmdspawnProjectile(spawnPosition, lookDirection, launchForce);
+    }
+
+    [Command]
+    void CmdspawnProjectile(Vector3 spawnPosition,Vector3 lookDirection, float launchForce)
+    {
+        Debug.Log("[SPAWNPROJECTILE] " + spawnPosition + " LAUNCHFORCE " + launchForce);
+   
+
+        GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, projectilePrefab.transform.rotation);
+
+        projectileInstance.transform.LookAt(projectileInstance.transform.position + lookDirection);
+        NetworkServer.Spawn(projectileInstance);
+
         Rigidbody projectileRigidbody = projectileInstance.GetComponent<Rigidbody>();
 
         if (projectileRigidbody != null)
         {
-            projectileRigidbody.AddForce(playerCamera.transform.forward * launchForce);
+            projectileRigidbody.AddForce(lookDirection.normalized * launchForce);
         }
+
+     
+    }
+
+    [Command]
+    void CmdDropCube()
+    {
+        if (cubePrefabTest != null)
+        {
+            Vector3 spawnPos = transform.position + transform.forward * 2;
+            Quaternion spawnRot = transform.rotation;
+            GameObject cube = Instantiate(cubePrefabTest, spawnPos, spawnRot);
+            NetworkServer.Spawn(cube);
+        }
+    }
+
+    public override void OnStartAuthority()
+    {
+        base.OnStartAuthority();
+        // Haz algo para que el objeto se vea o se active en el cliente que lo controla
     }
 }
