@@ -7,7 +7,8 @@ public class LocalPlayerController : NetworkBehaviour
 {
 
     [SerializeField] private float lookSpeed = 3f;
-
+    [SerializeField]
+    Vector3  respawnPos = Vector3.zero;
 
     private CharacterController controller;
     private Vector3 playerVelocity;
@@ -19,11 +20,8 @@ public class LocalPlayerController : NetworkBehaviour
 
 
     public float lookXLimit = 70.0f;
-
     float rotationX = 0;
-
     public Camera mainCamera;
-
 
     private void Start()
     {
@@ -34,7 +32,6 @@ public class LocalPlayerController : NetworkBehaviour
     public override  void OnStartLocalPlayer() {
         mainCamera.gameObject.SetActive(true);
     }
-
 
     private void Update()
     {
@@ -49,10 +46,7 @@ public class LocalPlayerController : NetworkBehaviour
 
         Vector3 move = transform.forward * Input.GetAxis("Vertical") + transform.right * +Input.GetAxis("Horizontal");
 
-
-
         controller.Move(move  * Time.deltaTime * playerSpeed);
-
 
         // Changes the height position of the player..
         if (Input.GetKey(KeyCode.Space) && groundedPlayer)
@@ -60,24 +54,20 @@ public class LocalPlayerController : NetworkBehaviour
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-
-
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
-
-
 
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
         transform.Rotate(Vector3.up * mouseX * lookSpeed);
 
-
-
         Vector3 cameraRotation = mainCamera.transform.rotation.eulerAngles;
         rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
         rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
         mainCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+
+        if (transform.position.y < -5) transform.position = respawnPos;
 
     }
 

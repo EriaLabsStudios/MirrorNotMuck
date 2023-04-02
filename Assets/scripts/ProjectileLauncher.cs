@@ -50,9 +50,9 @@ public class ProjectileLauncher : NetworkBehaviour
             LaunchProjectile();
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetButtonDown("Fire1"))
         {
-            CmdDropCube();
+            LaunchProjectile();
         }
     }
     void InitializeCamera()

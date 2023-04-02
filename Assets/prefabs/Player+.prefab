@@ -337,6 +337,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   lookSpeed: 3
+  respawnPos: {x: 0, y: 2, z: 0}
   playerSpeed: 5
   lookXLimit: 70
   mainCamera: {fileID: 905402168}
@@ -356,6 +357,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   projectilePrefab: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
+  cubePrefabTest: {fileID: 0}
   minLaunchForce: 500
   maxLaunchForce: 3000
   damageAmount: 10
