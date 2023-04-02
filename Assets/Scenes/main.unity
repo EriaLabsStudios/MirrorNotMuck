@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 76509e1f7078649499ead1d491b65f94, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: d1fdb8e44b28da34d9e922cca0bc740e, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.32547244, g: 0.26310694, b: 0.37403595, a: 1}
+  m_IndirectSpecularColor: {r: 0.007875491, g: 0.029294485, b: 0.15386382, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -352,14 +352,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 607882097}
-  m_LocalRotation: {x: -0, y: -0, z: -0.6935018, w: 0.720455}
-  m_LocalPosition: {x: -0.291, y: 0.072, z: 0.265}
+  m_LocalRotation: {x: -0.52921873, y: 0.50942004, z: -0.47056985, w: 0.48885873}
+  m_LocalPosition: {x: 0.241, y: 0.019, z: 0.29}
   m_LocalScale: {x: 0.23244363, y: 0.23244363, z: 0.23244363}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 951263013}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -87.816}
+  m_LocalEulerAnglesHint: {x: -2.177, y: 94.544, z: -90.173}
 --- !u!136 &607882099
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -742,14 +742,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695742781}
-  m_LocalRotation: {x: -0, y: -0, z: -0.6935018, w: 0.720455}
-  m_LocalPosition: {x: -0.181, y: 0.076, z: -0.381}
+  m_LocalRotation: {x: -0.45584822, y: 0.43879429, z: -0.53703284, w: 0.5579048}
+  m_LocalPosition: {x: -0.289, y: 0.072, z: 0.225}
   m_LocalScale: {x: 0.23244363, y: 0.23244363, z: 0.23244363}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 951263013}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -87.816}
+  m_LocalEulerAnglesHint: {x: -2.14, y: 78.494, z: -89.564}
 --- !u!136 &1695742783
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -867,7 +867,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 663834164c6a04740aaa1b778249ce7e, type: 2}
+  - {fileID: 2100000, guid: f5ffb23c71776424f8f776c97d3fd190, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
