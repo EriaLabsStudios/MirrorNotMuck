@@ -22,6 +22,10 @@ public class PistolController : NetworkBehaviour
     [SerializeField] private float fireSoundVolume = 1.0f;
     private AudioSource audioSource;
     [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private float fireRate = 5f; // Disparos por segundo
+
+    private float nextFireTime = 0f;
+
     // Propiedad para acceder al valor de daño
     public int Damage
     {
@@ -40,36 +44,39 @@ public class PistolController : NetworkBehaviour
     {
         _isplayerNull = player == null;
         audioSource = gameObject.AddComponent<AudioSource>();
-
     }
 
-   
 
     void Update()
     {
         InitializeIfNeeded();
         if (player == null || !player.hasAuthority) return;
-        
+
         if (player != null && player.isOwned)
         {
             if (playerCamera == null)
             {
                 playerCamera = FindCameraInChildren();
             }
+            
         }
         else
         {
             return;
         }
     }
-    
+
     public void Fire()
     {
         Debug.Log("PistolController::Fire");
-        LaunchProjectile();
-        
+        if (Time.time >= nextFireTime)
+        {
+            timeKeyPressed += Time.deltaTime;
+            LaunchProjectile();
+            nextFireTime = Time.time + 1f / fireRate;
+        }
     }
-    
+
     private void PlayFireSound()
     {
         if (fireSound != null && audioSource != null)
@@ -77,6 +84,7 @@ public class PistolController : NetworkBehaviour
             audioSource.PlayOneShot(fireSound, fireSoundVolume);
         }
     }
+
     private void PlayMuzzleFlash()
     {
         if (muzzleFlash != null)
@@ -84,7 +92,7 @@ public class PistolController : NetworkBehaviour
             muzzleFlash.Play();
         }
     }
-    
+
     [Command(channel = Channels.Unreliable)]
     private void LaunchProjectile()
     {
@@ -93,7 +101,7 @@ public class PistolController : NetworkBehaviour
         float launchForce = Mathf.Lerp(minLaunchForce, maxLaunchForce, chargePercentage);
         PlayFireSound();
         PlayMuzzleFlash();
-        Vector3 spawnPosition = new Vector3(firePoint.position.x,firePoint.position.y,firePoint.position.z + 1) ;
+        Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
         Vector3 lookDirection = firePoint.forward;
 
         CmdspawnProjectile(spawnPosition, lookDirection, maxLaunchForce);
@@ -102,9 +110,8 @@ public class PistolController : NetworkBehaviour
     [Command(channel = Channels.Unreliable)]
     private void CmdspawnProjectile(Vector3 spawnPosition, Vector3 lookDirection, float launchForce)
     {
-
-
-        GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, projectilePrefab.transform.rotation);
+        GameObject projectileInstance =
+            Instantiate(projectilePrefab, spawnPosition, projectilePrefab.transform.rotation);
 
         projectileInstance.transform.LookAt(projectileInstance.transform.position + lookDirection);
         NetworkServer.Spawn(projectileInstance);
@@ -116,6 +123,7 @@ public class PistolController : NetworkBehaviour
             projectileRigidbody.AddForce(lookDirection.normalized * launchForce);
         }
     }
+
     private void InitializeIfNeeded()
     {
         if (!initialized && isLocalPlayer && player != null)

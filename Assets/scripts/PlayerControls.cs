@@ -7,7 +7,7 @@ public class PlayerControls : NetworkBehaviour
 {
     public LocalPlayerController localPlayerController;
     public PistolController gunController;
-    public KeyCode fireKey = KeyCode.Mouse1;
+    public KeyCode fireKey1 = KeyCode.Mouse1;
     void Start()
     {
         localPlayerController = GetComponent<LocalPlayerController>();
@@ -24,8 +24,9 @@ public class PlayerControls : NetworkBehaviour
         if (gunController == null || localPlayerController == null || !localPlayerController.hasAuthority) return;
         
        // if(hasAutority)
-        if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(fireKey) )
+        if (Input.GetKey(fireKey1))
         {
+            Debug.Log("PlayerControls::Update::Input.GetButtonDown-1");
             gunController.Fire();
         }
     }
