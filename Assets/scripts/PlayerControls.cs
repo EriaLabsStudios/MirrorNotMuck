@@ -23,7 +23,7 @@ public class PlayerControls : NetworkBehaviour
         
         if (gunController == null || localPlayerController == null || !localPlayerController.hasAuthority) return;
         
-        if(hasAutority)
+       // if(hasAutority)
         if (Input.GetButtonDown("Fire1") || Input.GetKeyDown(fireKey) )
         {
             gunController.Fire();

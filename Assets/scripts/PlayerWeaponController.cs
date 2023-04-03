@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Mirror;
 public class PlayerWeaponController : MonoBehaviour
 {
     public GameObject weaponPrefab;
@@ -8,6 +8,8 @@ public class PlayerWeaponController : MonoBehaviour
     public Camera mainCamera;
     public Vector3 weaponPositionOffset;
     public Vector3 weaponRotationOffset;
+
+    public NetworkIdentity localPlayerController;
 
     void Start()
     {
@@ -34,6 +36,11 @@ public class PlayerWeaponController : MonoBehaviour
         if (weaponPrefab != null && weaponHolder != null)
         {
             currentWeapon = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+
+            NetworkServer.Spawn(currentWeapon, localPlayerController.connectionToClient);
+           // NetworkServer.AddPlayerForConnection(localPlayerController.connectionToClient, currentWeapon);
+
+         //  Debug.Log("IDENTIDAD " + currentWeapon.GetComponent<NetworkIdentity>());
         }
     }
 }

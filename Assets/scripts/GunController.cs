@@ -35,7 +35,15 @@ public class GunController : NetworkBehaviour
     private void Start()
     {
         _isplayerNull = player == null;
+
+        if (isLocalPlayer)
+        {
+     
+
+        }
     }
+
+   
 
     void Update()
     {
@@ -48,34 +56,6 @@ public class GunController : NetworkBehaviour
             {
                 playerCamera = FindCameraInChildren();
             }
-
-            // Aquí va el resto de tu lógica Update
-
-            /*
-            if (isLocalPlayer)
-            {
-                if (Input.GetKeyDown(fireKey))
-                {
-                    timeKeyPressed = 0f;
-                }
-
-                if (Input.GetKey(fireKey))
-                {
-                    timeKeyPressed += Time.deltaTime;
-                }
-
-                if (Input.GetKeyUp(fireKey))
-                {
-                    LaunchProjectile();
-                }
-
-                if (Input.GetButtonDown("Fire1"))
-                {
-                    Debug.Log("Pew pew pew pew");
-                    LaunchProjectile();
-                }
-            }
-            */
         }
         else
         {

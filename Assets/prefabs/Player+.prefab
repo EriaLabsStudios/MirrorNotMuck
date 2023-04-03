@@ -167,6 +167,7 @@ MonoBehaviour:
   mainCamera: {fileID: 4917044791885090993}
   weaponPositionOffset: {x: 1.2, y: -1.2, z: 1.5}
   weaponRotationOffset: {x: -2, y: 1, z: 3}
+  localPlayerController: {fileID: 6858938660191185028}
 --- !u!1 &6858938660191185147
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 930464643d8106343b132f8bd1e9bd47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
+  localPlayerController: {fileID: 0}
   gunController: {fileID: 0}
   fireKey: 324
 --- !u!1 &6858938660690483977
