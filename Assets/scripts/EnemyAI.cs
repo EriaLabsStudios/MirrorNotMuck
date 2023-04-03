@@ -11,9 +11,14 @@ public class EnemyAI : NetworkBehaviour
     [SerializeField] private float chaseDistance = 10f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private Transform target;
+
+    [SyncVar(hook =nameof(updateHealthBar))]
     [SerializeField] private int health = 100;
+
     private NavMeshAgent agent;
     private Animator animator;
+
+    [SerializeField] Transform healthBar;
 
     private void Start()
     {
@@ -58,21 +63,26 @@ public class EnemyAI : NetworkBehaviour
     
     void OnCollisionEnter(Collision collision)
     {
+
         if (collision.gameObject.CompareTag("Projectile"))
         {
+            Debug.Log("Es un projectil " + collision.gameObject.tag);
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
-            GunController projectile = collision.gameObject.GetComponent<GunController>();
-            if (projectile != null)
-            {
-                TakeDamage(projectile.Damage);
-            }
+            NetworkIdentity ni = NetworkClient.connection.identity;
+            LocalPlayerController pc = ni.GetComponent<LocalPlayerController>();
+
+
+            pc.CmdShootEnemy(this.gameObject, 20);
+
 
             // Destruir el proyectil al impactar
             Destroy(collision.gameObject);
         }
     }
-    void TakeDamage(int damage)
+  
+   public void TakeDamage(int damage)
     {
+        Debug.Log("Taken damage " + damage);
         health -= damage;
 
         if (health <= 0)
@@ -81,9 +91,17 @@ public class EnemyAI : NetworkBehaviour
         }
     }
 
+    void updateHealthBar(int oldHealth, int newHealth)
+    {
+        var calculaHealthScale = (newHealth * 6) / 100;
+        healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
+
+    }
+ 
+
     void Die()
     {
         // Lógica de muerte del enemigo (por ejemplo, animación de muerte, sonido, etc.)
-        Destroy(gameObject);
+        NetworkServer.Destroy(gameObject);
     }
 }

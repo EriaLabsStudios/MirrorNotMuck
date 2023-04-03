@@ -66,4 +66,10 @@ public class LocalPlayerController : NetworkBehaviour
         if (transform.position.y < -5) transform.position = respawnPos;
 
     }
+
+    [Command]
+    public void CmdShootEnemy(GameObject enemy, int damage)
+    {
+        enemy.GetComponent<EnemyAI>().TakeDamage(damage);
+    }
 }

@@ -36,11 +36,7 @@ public class GunController : NetworkBehaviour
     {
         _isplayerNull = player == null;
 
-        if (isLocalPlayer)
-        {
-     
 
-        }
     }
 
    
@@ -81,14 +77,13 @@ public class GunController : NetworkBehaviour
         Vector3 spawnPosition = firePoint.position;
         Vector3 lookDirection = firePoint.forward;
 
-        CmdspawnProjectile(spawnPosition, lookDirection, launchForce);
+        CmdspawnProjectile(spawnPosition, lookDirection, maxLaunchForce);
     }
 
     [Command(channel = Channels.Unreliable)]
     private void CmdspawnProjectile(Vector3 spawnPosition, Vector3 lookDirection, float launchForce)
     {
-        Debug.Log("Tengo autoridad para hacer pew pew");
-        Debug.Log("[SPAWNPROJECTILE] " + spawnPosition + " LAUNCHFORCE " + launchForce);
+
 
         GameObject projectileInstance = Instantiate(projectilePrefab, spawnPosition, projectilePrefab.transform.rotation);
 
