@@ -5,7 +5,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class GunController : NetworkBehaviour
+public class PistolController : NetworkBehaviour
 {
     public LocalPlayerController player;
     [SerializeField] private GameObject projectilePrefab;
@@ -61,8 +61,6 @@ public class GunController : NetworkBehaviour
     
     public void Fire()
     {
-        Debug.Log("RATATATATATATATATA");
-        Debug.Log("Pew pew pew pew");
         LaunchProjectile();
         
     }

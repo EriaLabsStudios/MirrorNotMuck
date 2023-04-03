@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerControls : NetworkBehaviour
 {
     public LocalPlayerController localPlayerController;
-    public GunController gunController;
+    public PistolController gunController;
     public KeyCode fireKey = KeyCode.Mouse1;
     void Start()
     {
@@ -18,7 +18,7 @@ public class PlayerControls : NetworkBehaviour
     {
         if (gunController == null)
         {
-            gunController = GetComponentInChildren<GunController>();
+            gunController = GetComponentInChildren<PistolController>();
         }
         
         if (gunController == null || localPlayerController == null || !localPlayerController.hasAuthority) return;

@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 0540a3f9b8ce14c4cab761bcd2a66535, type: 2}
+--- !u!1 &33166177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6169395801979492314, guid: 06c4df976f07af347ae32dd75a1b200c, type: 3}
+  m_PrefabInstance: {fileID: 2001543645}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &51193078
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,6 +841,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06c4df976f07af347ae32dd75a1b200c, type: 3}
+--- !u!4 &2001543646 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6833588354806074720, guid: 06c4df976f07af347ae32dd75a1b200c, type: 3}
+  m_PrefabInstance: {fileID: 2001543645}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2001543653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33166177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 2001543646}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &2051303844
 GameObject:
   m_ObjectHideFlags: 0

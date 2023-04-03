@@ -35,8 +35,10 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if (weaponPrefab != null && weaponHolder != null)
         {
+     
             currentWeapon = Instantiate(weaponPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
             NetworkServer.Spawn(currentWeapon, localPlayerController.connectionToClient);
+
         }
     }
 }
