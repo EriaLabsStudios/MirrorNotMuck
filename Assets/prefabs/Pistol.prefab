@@ -90,7 +90,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 4.5904e-41, y: -11431.516, z: 4.5904e-41, w: 9.403955e-38}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -5010,7 +5010,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 227648639326185105}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.657, z: 1.663}
+  m_LocalPosition: {x: 0, y: 0.7, z: 3.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5213,7 +5213,7 @@ BoxCollider:
   m_GameObject: {fileID: 2701394428553043509}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -5260,6 +5260,8 @@ MonoBehaviour:
   fireSound: {fileID: 8300000, guid: 24874acb4513f5449bbd895a68a77ff4, type: 3}
   fireSoundVolume: 1
   muzzleFlash: {fileID: 2052783548}
+  fireRate: 20
+  dispersion: 0.3
 --- !u!1 &4042936623817630816
 GameObject:
   m_ObjectHideFlags: 0
@@ -5484,7 +5486,7 @@ BoxCollider:
   m_GameObject: {fileID: 7979574597271846856}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}

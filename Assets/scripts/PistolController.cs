@@ -22,7 +22,8 @@ public class PistolController : NetworkBehaviour
     [SerializeField] private float fireSoundVolume = 1.0f;
     private AudioSource audioSource;
     [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private float fireRate = 5f; // Disparos por segundo
+    [SerializeField] private float fireRate = 5f;
+    [SerializeField] private float dispersion = 0.5f;
 
     private float nextFireTime = 0f;
 
@@ -101,12 +102,18 @@ public class PistolController : NetworkBehaviour
         float launchForce = Mathf.Lerp(minLaunchForce, maxLaunchForce, chargePercentage);
         PlayFireSound();
         PlayMuzzleFlash();
-        Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
-        Vector3 lookDirection = firePoint.forward;
+        Vector3 spawnPosition = firePoint.position;
+        //Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
+        //Vector3 lookDirection = firePoint.forward;
+        Vector3 lookDirection = new Vector3(firePoint.forward.x + getRandom(),firePoint.forward.y + getRandom(),firePoint.forward.z + getRandom()) ;
 
         CmdspawnProjectile(spawnPosition, lookDirection, maxLaunchForce);
     }
 
+    private float getRandom()
+    {
+        return UnityEngine.Random.Range(0.0f, dispersion);
+    } 
     [Command(channel = Channels.Unreliable)]
     private void CmdspawnProjectile(Vector3 spawnPosition, Vector3 lookDirection, float launchForce)
     {
