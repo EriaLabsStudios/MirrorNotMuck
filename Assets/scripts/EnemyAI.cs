@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using Mirror;
 using Mirror.Examples.Tanks;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAI : NetworkBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float chaseDistance = 10f;
     [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private Transform player;
+    [SerializeField] private Transform target;
     [SerializeField] private int health = 100;
+    private NavMeshAgent agent;
+    private Animator animator;
 
     private void Start()
     {
-        
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -22,26 +26,32 @@ public class EnemyAI : NetworkBehaviour
         if (!isServer) return;
 
         // Buscar al jugador si no se ha asignado una referencia
-        if (player == null)
+        if (target == null)
         {
             GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
             if (playerObject != null)
             {
-                player = playerObject.transform;
+                target = playerObject.transform;
             }
         }
 
-        if (player != null)
+        if (target != null)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            float distanceToPlayer = Vector3.Distance(transform.position, target.position);
 
             if (distanceToPlayer <= chaseDistance)
             {
-                Vector3 moveDirection = (player.position - transform.position).normalized;
-                transform.position += moveDirection * moveSpeed * Time.deltaTime;
-                
-                Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                agent.SetDestination(target.position);
+                float speed = agent.velocity.magnitude / agent.speed;
+                animator.SetFloat("Speed", speed);
+                Vector3 direction = (target.position - transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+            }
+            else
+            {
+                agent.ResetPath();  
+                animator.SetFloat("Speed", 0f);
             }
         }
     }
@@ -51,7 +61,7 @@ public class EnemyAI : NetworkBehaviour
         if (collision.gameObject.CompareTag("Projectile"))
         {
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
-            ProjectileLauncher projectile = collision.gameObject.GetComponent<ProjectileLauncher>();
+            GunController projectile = collision.gameObject.GetComponent<GunController>();
             if (projectile != null)
             {
                 TakeDamage(projectile.Damage);
