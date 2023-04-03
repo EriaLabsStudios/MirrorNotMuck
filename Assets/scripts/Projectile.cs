@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mirror;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     
     [SerializeField] private GameObject impactEffectPrefab;
+    [SerializeField] private bool destroyedAfterImpact;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +19,9 @@ public class Projectile : MonoBehaviour
         if (impactEffectPrefab != null)
         {
             GameObject impactEffectInstance = Instantiate(impactEffectPrefab, position, rotation);
-            Destroy(impactEffectInstance, 5f); // Ajusta el tiempo de destrucción según la duración de las partículas y el sonido.
+            Destroy(impactEffectInstance, 1f);
+            if (destroyedAfterImpact) Destroy(this.gameObject);
+            
         }
     }
     
