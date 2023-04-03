@@ -104,17 +104,12 @@ public class ProjectileLauncher : NetworkBehaviour
      
     }
 
-    [Command]
-    void CmdDropCube()
+    IEnumerator DestroBulletAfterTime()
     {
-        if (cubePrefabTest != null)
-        {
-            Vector3 spawnPos = transform.position + transform.forward * 2;
-            Quaternion spawnRot = transform.rotation;
-            GameObject cube = Instantiate(cubePrefabTest, spawnPos, spawnRot);
-            NetworkServer.Spawn(cube);
-        }
+        yield return new WaitForSeconds(.1f);
+        NetworkServer.Destroy(this.gameObject);
     }
+
 
     public override void OnStartAuthority()
     {
