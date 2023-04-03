@@ -5261,7 +5261,7 @@ MonoBehaviour:
   fireSoundVolume: 1
   muzzleFlash: {fileID: 2052783548}
   fireRate: 20
-  dispersion: 0.3
+  dispersion: 0.1
 --- !u!1 &4042936623817630816
 GameObject:
   m_ObjectHideFlags: 0

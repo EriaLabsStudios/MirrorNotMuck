@@ -8,11 +8,18 @@ public class Projectile : MonoBehaviour
     
     [SerializeField] private GameObject impactEffectPrefab;
     [SerializeField] private bool destroyedAfterImpact;
+
+
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        Rigidbody projectileRigidbody = gameObject.GetComponent<Rigidbody>();
+
+        if (projectileRigidbody != null)
+        {
+            projectileRigidbody.AddForce(transform.forward * 1000);
+        }
     }
     private void CreateImpactEffect(Vector3 position, Quaternion rotation)
     {
@@ -32,9 +39,5 @@ public class Projectile : MonoBehaviour
         CreateImpactEffect(impactPosition, impactRotation);
         // Aquí puedes agregar lógica adicional para destruir el proyectil o infligir daño.
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

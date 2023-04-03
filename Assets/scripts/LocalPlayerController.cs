@@ -19,10 +19,15 @@ public class LocalPlayerController : NetworkBehaviour
     float rotationX = 0;
     public Camera mainCamera;
 
+
+
     private void Start()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
         controller = gameObject.GetComponent<CharacterController>();
+
+
 
     }
     public override  void OnStartLocalPlayer() {
@@ -70,6 +75,22 @@ public class LocalPlayerController : NetworkBehaviour
     [Command]
     public void CmdShootEnemy(GameObject enemy, int damage)
     {
+        if(enemy != null)
         enemy.GetComponent<EnemyAI>().TakeDamage(damage);
+    }
+
+    [SerializeField]
+    GameObject projectile;
+
+    [Command]
+    public void CmdfireBullet(Vector3 spawnPos, Vector3 lookDirection)
+    {
+        GameObject projectileInstance =
+          Instantiate(projectile, spawnPos, projectile.transform.rotation);
+
+        projectileInstance.transform.LookAt(projectileInstance.transform.position + lookDirection);
+
+        NetworkServer.Spawn(projectileInstance);
+
     }
 }

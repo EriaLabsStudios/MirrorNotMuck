@@ -5,7 +5,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class PistolController : NetworkBehaviour
+public class PistolController : MonoBehaviour
 {
     public LocalPlayerController player;
     [SerializeField] private GameObject projectilePrefab;
@@ -25,6 +25,7 @@ public class PistolController : NetworkBehaviour
     [SerializeField] private float fireRate = 5f;
     [SerializeField] private float dispersion = 0.5f;
 
+
     private float nextFireTime = 0f;
 
     // Propiedad para acceder al valor de daño
@@ -32,6 +33,8 @@ public class PistolController : NetworkBehaviour
     {
         get { return damageAmount; }
     }
+
+
 
     private Camera playerCamera;
     private bool _isplayerNull;
@@ -45,6 +48,9 @@ public class PistolController : NetworkBehaviour
     {
         _isplayerNull = player == null;
         audioSource = gameObject.AddComponent<AudioSource>();
+     
+
+
     }
 
 
@@ -70,10 +76,15 @@ public class PistolController : NetworkBehaviour
     public void Fire()
     {
         Debug.Log("PistolController::Fire");
+
+
         if (Time.time >= nextFireTime)
         {
             timeKeyPressed += Time.deltaTime;
-            LaunchProjectile();
+            Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
+            Vector3 lookDirection = new Vector3(firePoint.forward.x + getRandom(), firePoint.forward.y + getRandom(), firePoint.forward.z + getRandom());
+
+            player.CmdfireBullet(spawnPosition,lookDirection);
             nextFireTime = Time.time + 1f / fireRate;
         }
     }
@@ -94,7 +105,7 @@ public class PistolController : NetworkBehaviour
         }
     }
 
-    [Command(channel = Channels.Unreliable)]
+   /* [Command(channel = Channels.Unreliable)]
     private void LaunchProjectile()
     {
         if (!isOwned) return;
@@ -108,13 +119,13 @@ public class PistolController : NetworkBehaviour
         Vector3 lookDirection = new Vector3(firePoint.forward.x + getRandom(),firePoint.forward.y + getRandom(),firePoint.forward.z + getRandom()) ;
 
         CmdspawnProjectile(spawnPosition, lookDirection, maxLaunchForce);
-    }
+    }*/
 
     private float getRandom()
     {
         return UnityEngine.Random.Range(0.0f, dispersion);
     } 
-    [Command(channel = Channels.Unreliable)]
+   /* [Command(channel = Channels.Unreliable)]
     private void CmdspawnProjectile(Vector3 spawnPosition, Vector3 lookDirection, float launchForce)
     {
         GameObject projectileInstance =
@@ -129,20 +140,19 @@ public class PistolController : NetworkBehaviour
         {
             projectileRigidbody.AddForce(lookDirection.normalized * launchForce);
         }
-    }
+    }*/
 
     private void InitializeIfNeeded()
     {
-        if (!initialized && isLocalPlayer && player != null)
-        {
+        
             _isplayerNull = player == null;
 
             if (!_isplayerNull)
             {
                 playerCamera = FindCameraInChildren();
-                Debug.Log($"The result of the player is now : {player} and camera: {playerCamera}");
+               // Debug.Log($"The result of the player is now : {player} and camera: {playerCamera}");
                 initialized = true;
             }
-        }
+        
     }
 }
