@@ -18,6 +18,10 @@ public class PistolController : NetworkBehaviour
     private bool initialized = false;
     private float timeKeyPressed;
     private bool has_been_initialized;
+    [SerializeField] private AudioClip fireSound;
+    [SerializeField] private float fireSoundVolume = 1.0f;
+    private AudioSource audioSource;
+    [SerializeField] private ParticleSystem muzzleFlash;
     // Propiedad para acceder al valor de daño
     public int Damage
     {
@@ -35,7 +39,7 @@ public class PistolController : NetworkBehaviour
     private void Start()
     {
         _isplayerNull = player == null;
-
+        audioSource = gameObject.AddComponent<AudioSource>();
 
     }
 
@@ -61,8 +65,24 @@ public class PistolController : NetworkBehaviour
     
     public void Fire()
     {
+        Debug.Log("PistolController::Fire");
         LaunchProjectile();
         
+    }
+    
+    private void PlayFireSound()
+    {
+        if (fireSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(fireSound, fireSoundVolume);
+        }
+    }
+    private void PlayMuzzleFlash()
+    {
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
     }
     
     [Command(channel = Channels.Unreliable)]
@@ -71,8 +91,9 @@ public class PistolController : NetworkBehaviour
         if (!isOwned) return;
         float chargePercentage = Mathf.Clamp01(timeKeyPressed / chargeTime);
         float launchForce = Mathf.Lerp(minLaunchForce, maxLaunchForce, chargePercentage);
-
-        Vector3 spawnPosition = firePoint.position;
+        PlayFireSound();
+        PlayMuzzleFlash();
+        Vector3 spawnPosition = new Vector3(firePoint.position.x,firePoint.position.y,firePoint.position.z + 1) ;
         Vector3 lookDirection = firePoint.forward;
 
         CmdspawnProjectile(spawnPosition, lookDirection, maxLaunchForce);

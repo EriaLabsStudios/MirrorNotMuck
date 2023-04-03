@@ -34,26 +34,6 @@ public class ProjectileLauncher : NetworkBehaviour
         }
         if (playerCamera == null) return;
 
-        
-        if (Input.GetKeyDown(fireKey))
-        {
-            timeKeyPressed = 0f;
-        }
-
-        if (Input.GetKey(fireKey))
-        {
-            timeKeyPressed += Time.deltaTime;
-        }
-
-        if (Input.GetKeyUp(fireKey))
-        {
-            LaunchProjectile();
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            LaunchProjectile();
-        }
     }
     void InitializeCamera()
     {

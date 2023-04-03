@@ -11,13 +11,10 @@ public class EnemyAI : NetworkBehaviour
     [SerializeField] private float chaseDistance = 10f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private Transform target;
-
     [SyncVar(hook =nameof(updateHealthBar))]
     [SerializeField] private int health = 100;
-
     private NavMeshAgent agent;
     private Animator animator;
-
     [SerializeField] Transform healthBar;
 
     private void Start()
@@ -70,8 +67,7 @@ public class EnemyAI : NetworkBehaviour
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
             NetworkIdentity ni = NetworkClient.connection.identity;
             LocalPlayerController pc = ni.GetComponent<LocalPlayerController>();
-
-
+            
             pc.CmdShootEnemy(this.gameObject, 20);
 
 
@@ -84,6 +80,7 @@ public class EnemyAI : NetworkBehaviour
     {
         Debug.Log("Taken damage " + damage);
         health -= damage;
+        
 
         if (health <= 0)
         {
