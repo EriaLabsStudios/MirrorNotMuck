@@ -12,10 +12,14 @@ public class GameController : NetworkBehaviour
     GameObject[] enemysPrefabs;
     [SerializeField]
     Transform[] enemySpawnPoints;
+    [SerializeField]
+    Transform enemyParent;
 
     float spawnRateEnemy = 5;
     float nextEnemySpawn = 0;
-    // Start is called before the first frame update
+
+
+
 
     [Server]
     void Update()
@@ -59,7 +63,7 @@ public class GameController : NetworkBehaviour
         int randomEnemy = Random.Range(0, enemysPrefabs.Length - 1);
         int spawnPos = Random.Range(0, enemySpawnPoints.Length - 1);
 
-        GameObject enemy = Instantiate(enemysPrefabs[randomEnemy], enemySpawnPoints[spawnPos].position, enemySpawnPoints[spawnPos].rotation);
+        GameObject enemy = Instantiate(enemysPrefabs[randomEnemy], enemySpawnPoints[spawnPos].position, enemySpawnPoints[spawnPos].rotation, enemyParent);
         NetworkServer.Spawn(enemy);
        
 
