@@ -76,7 +76,7 @@ public class EnemyAI : NetworkBehaviour
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
             NetworkIdentity ni = NetworkClient.connection.identity;
             LocalPlayerController pc = ni.GetComponent<LocalPlayerController>();
-
+            //TODO: El daño instanciado en el enemigo y no en el arma?
             pc.CmdShootEnemy(this.gameObject, 20);
 
 

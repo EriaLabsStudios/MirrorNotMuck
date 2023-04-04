@@ -87,7 +87,7 @@ MonoBehaviour:
   maxPitch: 45
   minPitch: -45
   rotationSpeed: 20
-  fireRate: 4
+  fireRate: 200
   detectionRadius: 50
   projectile: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
 --- !u!114 &265294826
