@@ -599,7 +599,7 @@ MonoBehaviour:
   chaseDistance: 200
   rotationSpeed: 5
   target: {fileID: 0}
-  health: 10000
+  health: 70
   healthBar: {fileID: 1904725344}
   floatingTextPrefab: {fileID: 2636251682199716196, guid: 76c6466eb7d4353449d13cd83bfc38c4, type: 3}
   yOffset: 3

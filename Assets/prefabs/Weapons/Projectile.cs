@@ -33,10 +33,14 @@ public class Projectile : MonoBehaviour
     
     void OnCollisionEnter(Collision collision)
     {
-        Vector3 impactPosition = collision.contacts[0].point;
-        Quaternion impactRotation = Quaternion.LookRotation(collision.contacts[0].normal);
-        CreateImpactEffect(impactPosition, impactRotation);
-        // Aquí puedes agregar lógica adicional para destruir el proyectil o infligir daño.
+        if (!collision.gameObject.CompareTag("Weapon"))
+        {
+            Vector3 impactPosition = collision.contacts[0].point;
+            Quaternion impactRotation = Quaternion.LookRotation(collision.contacts[0].normal);
+            CreateImpactEffect(impactPosition, impactRotation);
+        }
+        
+        
     }
 
 }

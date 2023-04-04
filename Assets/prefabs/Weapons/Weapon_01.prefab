@@ -182,17 +182,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 7370488563949055429, guid: 04963624b89cc5941bd18e1cfa31e96e, type: 3}
-  projectilePrefab: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
   firePoint: {fileID: 1879750077}
-  LauncForce: 500
-  damageAmount: 10
-  chargeTime: 2
-  fireKey: 32
+  fireRate: 3
+  dispersion: 0
   fireSound: {fileID: 8300000, guid: 24874acb4513f5449bbd895a68a77ff4, type: 3}
   fireSoundVolume: 1
   muzzleFlash: {fileID: 6987682296994485169}
-  fireRate: 3
-  dispersion: 0.05
+  animator: {fileID: 0}
 --- !u!114 &8172076190995484264
 MonoBehaviour:
   m_ObjectHideFlags: 0

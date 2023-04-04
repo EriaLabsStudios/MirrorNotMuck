@@ -15,13 +15,13 @@ public class NetTurretControl : NetworkBehaviour
 
     Transform enemyParent;
 
-    [Header("Configuración de la torreta")]
-    public float maxPitch = 45f; // el ángulo máximo de pitch permitido
-    public float minPitch = -45f; // el ángulo mínimo de pitch permitido
+    [Header("Configuraciï¿½n de la torreta")]
+    public float maxPitch = 45f; // el ï¿½ngulo mï¿½ximo de pitch permitido
+    public float minPitch = -45f; // el ï¿½ngulo mï¿½nimo de pitch permitido
     public float rotationSpeed = 20f;
 
     public float fireRate = 4f; // la frecuencia de disparo en segundos
-    public float detectionRadius = 10f; // el radio de detección de enemigos
+    public float detectionRadius = 10f; // el radio de detecciï¿½n de enemigos
 
 
     [SerializeField]
@@ -56,7 +56,7 @@ public class NetTurretControl : NetworkBehaviour
         Vector3 targetPos = targetEnemy.transform.position - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(targetPos, Vector3.up);
 
-        // Limitar el ángulo de pitch entre minPitch y maxPitch
+        // Limitar el ï¿½ngulo de pitch entre minPitch y maxPitch
         Vector3 eulerAngles = targetRotation.eulerAngles;
         float pitch = eulerAngles.x;
         if (pitch > 180f) pitch -= 360f; // Convertir de 0-360 a -180-180
@@ -65,7 +65,7 @@ public class NetTurretControl : NetworkBehaviour
 
         Quaternion newRotation = Quaternion.Euler(eulerAngles);
 
-        // Aplicar rotación suave usando Lerp
+        // Aplicar rotaciï¿½n suave usando Lerp
         turretHead.rotation = Quaternion.Lerp(turretHead.rotation, newRotation, Time.deltaTime * rotationSpeed);
     }
 
