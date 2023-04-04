@@ -10,8 +10,7 @@ public class PistolController : MonoBehaviour
     public LocalPlayerController player;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private float minLaunchForce = 500f;
-    [SerializeField] private float maxLaunchForce = 3000f;
+    [SerializeField] private float LauncForce = 500f;
     [SerializeField] private int damageAmount = 10;
     [SerializeField] private float chargeTime = 2f;
     [SerializeField] private KeyCode fireKey = KeyCode.Space;
@@ -24,8 +23,6 @@ public class PistolController : MonoBehaviour
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private float fireRate = 5f;
     [SerializeField] private float dispersion = 0.5f;
-
-
     private float nextFireTime = 0f;
 
     // Propiedad para acceder al valor de daño
@@ -76,14 +73,14 @@ public class PistolController : MonoBehaviour
     public void Fire()
     {
         Debug.Log("PistolController::Fire");
-
-
         if (Time.time >= nextFireTime)
         {
             timeKeyPressed += Time.deltaTime;
-            Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
+            //Vector3 spawnPosition = new Vector3(firePoint.position.x, firePoint.position.y, firePoint.position.z + 1);
+            Vector3 spawnPosition = firePoint.position;
             Vector3 lookDirection = new Vector3(firePoint.forward.x + getRandom(), firePoint.forward.y + getRandom(), firePoint.forward.z + getRandom());
-
+            PlayFireSound();
+            PlayMuzzleFlash();
             player.CmdfireBullet(spawnPosition,lookDirection);
             nextFireTime = Time.time + 1f / fireRate;
         }
@@ -123,7 +120,7 @@ public class PistolController : MonoBehaviour
 
     private float getRandom()
     {
-        return UnityEngine.Random.Range(0.0f, dispersion);
+        return UnityEngine.Random.Range(-0.0f, dispersion);
     } 
    /* [Command(channel = Channels.Unreliable)]
     private void CmdspawnProjectile(Vector3 spawnPosition, Vector3 lookDirection, float launchForce)
