@@ -94,7 +94,6 @@ public class LocalPlayerController : NetworkBehaviour
             Instantiate(projectile, spawnPos, projectile.transform.rotation);
 
         projectileInstance.transform.LookAt(projectileInstance.transform.position + lookDirection);
-
         NetworkServer.Spawn(projectileInstance);
     }
 }

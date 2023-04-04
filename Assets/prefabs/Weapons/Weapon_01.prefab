@@ -185,10 +185,11 @@ MonoBehaviour:
   firePoint: {fileID: 1879750077}
   fireRate: 3
   dispersion: 0
-  fireSound: {fileID: 8300000, guid: 24874acb4513f5449bbd895a68a77ff4, type: 3}
+  fireSound: {fileID: 8300000, guid: bda35fcc14a85994b82acd4ef03d5a91, type: 3}
   fireSoundVolume: 1
   muzzleFlash: {fileID: 6987682296994485169}
   animator: {fileID: 0}
+  damage: 0
 --- !u!114 &8172076190995484264
 MonoBehaviour:
   m_ObjectHideFlags: 0

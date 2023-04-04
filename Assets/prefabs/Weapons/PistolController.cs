@@ -14,6 +14,7 @@ public class PistolController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private ParticleSystem muzzleFlash;
     public Animator animator;
+    public float damage;
 
     private Camera playerCamera;
 
