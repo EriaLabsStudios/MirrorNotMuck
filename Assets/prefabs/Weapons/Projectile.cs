@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private GameObject impactEffectPrefab;
     [SerializeField] private bool destroyedAfterImpact;
     // Start is called before the first frame update
+    [SerializeField] private float bulletForce = 10000;
     
     void Start()
     {
@@ -16,7 +17,7 @@ public class Projectile : MonoBehaviour
 
         if (projectileRigidbody != null)
         {
-            projectileRigidbody.AddForce(transform.forward * 1000);
+            projectileRigidbody.AddForce(transform.forward * bulletForce);
         }
     }
     private void CreateImpactEffect(Vector3 position, Quaternion rotation)

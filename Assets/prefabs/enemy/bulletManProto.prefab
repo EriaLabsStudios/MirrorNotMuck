@@ -464,10 +464,10 @@ GameObject:
   - component: {fileID: 6978431388600598200}
   - component: {fileID: 6978431388600598193}
   - component: {fileID: 6978431388600598206}
-  - component: {fileID: 7787765168802689110}
+  - component: {fileID: 7550420235444184581}
   m_Layer: 0
   m_Name: bulletManProto
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -600,7 +600,7 @@ MonoBehaviour:
   target: {fileID: 0}
   health: 100
   healthBar: {fileID: 1904725344}
---- !u!114 &7787765168802689110
+--- !u!114 &7550420235444184581
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

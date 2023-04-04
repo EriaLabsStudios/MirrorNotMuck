@@ -15,16 +15,16 @@ public class GameController : NetworkBehaviour
     [SerializeField]
     Transform enemyParent;
 
-    float spawnRateEnemy = 5;
+    float spawnRateEnemy = 10;
     float nextEnemySpawn = 0;
 
 
 
 
-    [Server]
+ 
     void Update()
     {
-    
+        if (!isServer) return;
         if (isRoundActive)
         {
             if( Time.timeSinceLevelLoad > nextEnemySpawn )
@@ -36,27 +36,14 @@ public class GameController : NetworkBehaviour
        
     }
 
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        NetworkIdentity networkIdentity = GetComponent<NetworkIdentity>();
-        networkIdentity.AssignClientAuthority(NetworkServer.localConnection);
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        CmdStartGame();
-    }
-
-
-
-    [Command]
+  
     void CmdStartGame()
     {
         Debug.Log("[GameController] Start game ");
         isRoundActive = true;
     }
 
+    
     void spawnEnemy()
     {
         Debug.Log("[GameController] spawn Enemy ");
