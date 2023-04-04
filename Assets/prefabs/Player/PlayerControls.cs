@@ -23,10 +23,8 @@ public class PlayerControls : NetworkBehaviour
         {
             gunController = GetComponentInChildren<PistolController>();
         }
-        
-      
-        
-       // if(hasAutority)
+
+        // if(hasAutority)
         if (Input.GetKey(KeyCode.Mouse0))
         {
             Debug.Log("PlayerControls::Update::Input.GetButtonDown-1");

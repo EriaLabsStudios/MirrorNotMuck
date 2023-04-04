@@ -5246,14 +5246,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f268fe338a91501459a96c60614a5206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0.1
   player: {fileID: 0}
   projectilePrefab: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
   firePoint: {fileID: 5033472772103006850}
-  minLaunchForce: 500
-  maxLaunchForce: 3000
+  minLaunchForce: 190000
+  maxLaunchForce: 10000
   damageAmount: 10
   chargeTime: 2
   fireKey: 9

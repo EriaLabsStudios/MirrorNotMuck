@@ -8,10 +8,8 @@ public class Projectile : MonoBehaviour
     
     [SerializeField] private GameObject impactEffectPrefab;
     [SerializeField] private bool destroyedAfterImpact;
-
-
-    
     // Start is called before the first frame update
+    
     void Start()
     {
         Rigidbody projectileRigidbody = gameObject.GetComponent<Rigidbody>();
