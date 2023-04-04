@@ -1,0 +1,194 @@
+{
+    "name": "StandarControls",
+    "maps": [
+        {
+            "name": "GameplayControls",
+            "id": "9120f1a3-a930-4c5a-abcc-ead33fc8c4e4",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "00ef905f-b896-45f6-8050-4b7a01b2b106",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Look",
+                    "type": "Button",
+                    "id": "995cff47-157b-48a5-9238-6f09c21aac9b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_00",
+                    "type": "Button",
+                    "id": "40b949f3-61b9-4129-96ed-5da4d351ee73",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_1",
+                    "type": "Button",
+                    "id": "071c1d3a-cb9c-4abd-97a2-b4bc6d81332d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_2",
+                    "type": "Button",
+                    "id": "61ca99f7-e731-4fcb-b06f-d4885af58b62",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_3",
+                    "type": "Button",
+                    "id": "6cb18a48-b11c-4017-bd56-e8d4d333767b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_4",
+                    "type": "Button",
+                    "id": "1215e792-6ab0-4e81-85fa-c73b18af39c8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_5",
+                    "type": "Button",
+                    "id": "ad98890a-808b-4493-a3be-60509ee00441",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Action_6",
+                    "type": "Button",
+                    "id": "fefd5665-0db1-4f05-8237-bd15e7b3373e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "8857f199-7a07-4150-b7d9-0df1014c5a30",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8c8251eb-c1b8-4fc2-ba3f-93f08c89730c",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7af051dd-a93f-4f0d-bb5c-2ee726d4c0ef",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_00",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7127bb42-746a-461c-8e70-976f7501c8d5",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b92c8052-2248-4945-a2f1-c52d629b718f",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a671841-482f-4ba9-9d48-f60aa8533d19",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a04ff02-885b-4241-9df9-f339453e210a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e3c3f2c7-0cf8-407b-bfdd-36901810e2a7",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_5",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8e50b1c-502c-4608-abb6-a8731468abb2",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Action_6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

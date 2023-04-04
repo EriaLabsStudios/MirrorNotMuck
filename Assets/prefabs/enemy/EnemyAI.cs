@@ -4,6 +4,8 @@ using Mirror;
 using Mirror.Examples.Tanks;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
+using Unity.VisualScripting;
 
 public class EnemyAI : NetworkBehaviour
 {
@@ -11,11 +13,19 @@ public class EnemyAI : NetworkBehaviour
     [SerializeField] private float chaseDistance = 10f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private Transform target;
-    [SyncVar(hook =nameof(updateHealthBar))]
-    [SerializeField] private int health = 100;
+
+    [SyncVar(hook = nameof(updateHealthBar))] [SerializeField]
+    private int health = 100;
+
     private NavMeshAgent agent;
     private Animator animator;
     [SerializeField] Transform healthBar;
+    [SerializeField] private GameObject floatingTextPrefab;
+    [SerializeField] private float yOffset;
+    [Header("Audio")] [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip damagaSound;
+    [SerializeField] private AudioClip deathSound;
+    private float deathTimer = 1f;
 
     private void Start()
     {
@@ -52,22 +62,21 @@ public class EnemyAI : NetworkBehaviour
             }
             else
             {
-                agent.ResetPath();  
+                agent.ResetPath();
                 animator.SetFloat("Speed", 0f);
             }
         }
     }
-    
+
     void OnCollisionEnter(Collision collision)
     {
-
         if (collision.gameObject.CompareTag("Projectile"))
         {
             Debug.Log("Es un projectil " + collision.gameObject.tag);
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
             NetworkIdentity ni = NetworkClient.connection.identity;
             LocalPlayerController pc = ni.GetComponent<LocalPlayerController>();
-            
+
             pc.CmdShootEnemy(this.gameObject, 20);
 
 
@@ -75,15 +84,31 @@ public class EnemyAI : NetworkBehaviour
             Destroy(collision.gameObject);
         }
     }
-  
-   public void TakeDamage(int damage)
+
+    private void ShowFloatingText(int damage)
+    {
+        if (floatingTextPrefab != null)
+        {
+            GameObject textInstance = Instantiate(floatingTextPrefab, transform.position + Vector3.up * yOffset,
+                Quaternion.identity);
+            FloatingDamageText floatingText = textInstance.GetComponent<FloatingDamageText>();
+            floatingText.SetText(damage.ToString());
+        }
+    }
+
+    public void TakeDamage(int damage)
     {
         Debug.Log("Taken damage " + damage);
+        ShowFloatingText(damage);
         health -= damage;
-        
+
+        audioSource.clip = damagaSound;
+        audioSource.Play();
 
         if (health <= 0)
         {
+            audioSource.clip = deathSound;
+            audioSource.Play();
             Die();
         }
     }
@@ -92,9 +117,8 @@ public class EnemyAI : NetworkBehaviour
     {
         var calculaHealthScale = (newHealth * 6) / 100;
         healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
-
     }
- 
+
 
     void Die()
     {
