@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 46769557941180821}
   - component: {fileID: 46769557941180820}
   - component: {fileID: 46769557941180907}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 46769558507694596}
   - component: {fileID: 46769558507694599}
   - component: {fileID: 46769558507694598}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 63
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -376,7 +376,6 @@ GameObject:
   - component: {fileID: 6884298442087897416}
   - component: {fileID: 6884298442087897421}
   - component: {fileID: 6884298442087897422}
-  - component: {fileID: 6884298442087897423}
   - component: {fileID: 3037992968876522617}
   - component: {fileID: 1024607754614745005}
   - component: {fileID: 2021848047}
@@ -446,24 +445,6 @@ MonoBehaviour:
   lookXLimit: 70
   weaponHolder: {fileID: 1996549127842853033}
   projectile: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
---- !u!114 &6884298442087897423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6884298442087897417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 930464643d8106343b132f8bd1e9bd47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0.1
-  localPlayerController: {fileID: 6884298442087897422}
-  gunController: {fileID: 0}
-  fireKey1: 325
 --- !u!114 &3037992968876522617
 MonoBehaviour:
   m_ObjectHideFlags: 0
