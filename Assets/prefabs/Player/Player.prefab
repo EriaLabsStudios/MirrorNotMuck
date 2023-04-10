@@ -435,9 +435,6 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  playerSpeed: 10
-  jumpHeight: 1
-  gravityValue: -9.81
   respawnPos: {x: 0, y: 2, z: 0}
   mainCamera: {fileID: 1996549127940317603}
   cameraHolder: {fileID: 3950355486158749839}
@@ -445,6 +442,12 @@ MonoBehaviour:
   lookXLimit: 70
   weaponHolder: {fileID: 1996549127842853033}
   projectile: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
+  moveSpeed: 80
+  slideSpeed: 140
+  friction: 10
+  velocity: {x: 0, y: 0, z: 0}
+  jumpHeight: 0.6
+  gravityValue: -9.81
 --- !u!114 &3037992968876522617
 MonoBehaviour:
   m_ObjectHideFlags: 0
