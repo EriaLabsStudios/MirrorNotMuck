@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Mirror;
+using Mirror.SimpleWeb;
 using UnityEngine;
 
 public class LocalPlayerController : NetworkBehaviour
@@ -21,17 +22,34 @@ public class LocalPlayerController : NetworkBehaviour
     [Header("Weapon Settings")]
     public Transform weaponHolder;
     [SerializeField] GameObject projectile;
+    [Header("Player Stats")]
+    [SerializeField] [SyncVar] private int score = 0;
+    [SyncVar] private int health = 100;
     
     private CharacterController controller;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-
+    private PlayerUIController playerUIController;
+    public void AddScore(int points)
+    {
+        Log.Info("LocalPlayerController::AddScore before isLocalPlayer");
+        if (isLocalPlayer)
+        {
+            Log.Info("LocalPlayerController::AddScore after isLocalPlayer");
+            score += points;
+            playerUIController.UpdatePoints(score);
+        }
+    }
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         controller = gameObject.GetComponent<CharacterController>();
-
+        playerUIController = FindObjectOfType<PlayerUIController>();
+        if (playerUIController == null)
+        {
+            Debug.LogError("PlayerUIController no se encuentra en la escena");
+        }
         if (isLocalPlayer)
         {
             mainCamera.gameObject.SetActive(true);

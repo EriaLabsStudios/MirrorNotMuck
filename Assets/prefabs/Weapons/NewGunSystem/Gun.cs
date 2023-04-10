@@ -18,11 +18,16 @@ public class Gun : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private ParticleSystem muzzleFlash;
     public Animator animator;
+    private PlayerUIController playerUIController;
+    private LocalPlayerController playerLocalController;
     
     private float timeSinceLastShoot = 0;
     // Start is called before the first frame update
     void Start()
     {
+        playerUIController = FindObjectOfType<PlayerUIController>();
+        playerLocalController = gameObject.transform.parent.GetComponent<LocalPlayerController>();
+        playerUIController.UpdateBullets(gunData.currentAmmo);
         eventHandler();
         animator = GetComponent<Animator>();
         audioSource = gameObject.AddComponent<AudioSource>();
@@ -59,6 +64,7 @@ public class Gun : MonoBehaviour
     public void Shoot()
     {
         Debug.Log($"Gun:Shoot Pre Pew");
+        playerUIController.UpdateBullets(gunData.currentAmmo);
         if (gunData.currentAmmo > 0)
         {
             if (CanShoot())
@@ -71,10 +77,11 @@ public class Gun : MonoBehaviour
                 {
                     Debug.Log($"Gun:Shoot - Raycast trasform collided:  {hitInfo.transform.name}");
                     IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
-                    damageable?.Damage(gunData.damage);
+                    damageable?.Damage(gunData.damage, playerLocalController);
                 }
                 gunData.currentAmmo--;
                 timeSinceLastShoot = 0;
+                playerUIController.UpdateBullets(gunData.currentAmmo);
                 OnGunShot();
             }
         }
