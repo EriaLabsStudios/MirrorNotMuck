@@ -10,10 +10,16 @@ public class NetTurretControl : NetworkBehaviour
     [SerializeField]
     [SyncVar]
     GameObject targetEnemy;
+    [SyncVar]
+    Vector3 posEnemy;
+
     [SerializeField]
     Transform shootPos;
 
     Transform enemyParent;
+
+    [SerializeField]
+    LineRenderer lineRenderer;
 
     [Header("Configuraci�n de la torreta")]
     public float maxPitch = 45f; // el �ngulo m�ximo de pitch permitido
@@ -72,13 +78,16 @@ public class NetTurretControl : NetworkBehaviour
     [Server]
     void FireBullet()
     {
-        RpcShootBulletEffects();
+     
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast(shootPos.position, shootPos.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
         {
             Debug.DrawRay(shootPos.position, shootPos.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             Debug.Log($"hit.collider {hit.collider.gameObject.name}");
+
+            posEnemy = hit.collider.transform.position;
+            RpcShootBulletEffects();
             if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.gameObject.GetComponent<EnemyAI>().TakeDamage(35);
@@ -92,7 +101,7 @@ public class NetTurretControl : NetworkBehaviour
         }
     }
 
-    [Server]
+   
     void CheckForEnemies()
     {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRadius);
@@ -112,10 +121,20 @@ public class NetTurretControl : NetworkBehaviour
     [ClientRpc]
     public void RpcShootBulletEffects()
     {
-        GameObject projectileInstance =
-          Instantiate(projectile, shootPos.position, projectile.transform.rotation);
 
-        projectileInstance.transform.LookAt(projectileInstance.transform.position + shootPos.forward);
+        lineRenderer.gameObject.SetActive(true);
+        lineRenderer.SetPosition(0, Vector3.zero);
+        lineRenderer.SetPosition(1, new Vector3(0,0, Vector3.Distance(shootPos.transform.position, posEnemy)));
+
+       StartCoroutine(disableShootBulletEffects());
+    }
+
+    IEnumerator disableShootBulletEffects()
+    
+    {
+        yield return new WaitForSeconds(.5f);
+        lineRenderer.gameObject.SetActive(false);
+
     }
 
     void startShooting()
