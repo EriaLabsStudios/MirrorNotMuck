@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using TMPro;
 using Unity.VisualScripting;
 
-public class EnemyAI : NetworkBehaviour
+public class EnemyAI : NetworkBehaviour, IDamageable
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float chaseDistance = 10f;
@@ -15,7 +15,7 @@ public class EnemyAI : NetworkBehaviour
     [SerializeField] private Transform target;
 
     [SyncVar(hook = nameof(updateHealthBar))] [SerializeField]
-    private int health = 100;
+    private float health = 100;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -102,18 +102,10 @@ public class EnemyAI : NetworkBehaviour
         ShowFloatingText(damage);
         health -= damage;
 
-        audioSource.clip = damagaSound;
-        audioSource.Play();
-
-        if (health <= 0)
-        {
-            audioSource.clip = deathSound;
-            audioSource.Play();
-            Die();
-        }
+        
     }
 
-    void updateHealthBar(int oldHealth, int newHealth)
+    void updateHealthBar(float oldHealth, float newHealth)
     {
         var calculaHealthScale = (newHealth * 6) / 100;
         healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
@@ -124,5 +116,18 @@ public class EnemyAI : NetworkBehaviour
     {
         // Lógica de muerte del enemigo (por ejemplo, animación de muerte, sonido, etc.)
         NetworkServer.Destroy(gameObject);
+    }
+
+    public void Damage(float damage)
+    {
+        health -= damage;
+        audioSource.clip = damagaSound;
+        audioSource.Play();
+        if (health <= 0)
+        {
+            audioSource.clip = deathSound;
+            audioSource.Play();
+            Die();
+        }
     }
 }

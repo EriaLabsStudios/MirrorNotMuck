@@ -864,7 +864,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 100
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 6884298442087897417, guid: 244f9e090542efc46940b6f515b2fc8f, type: 3}
+  playerPrefab: {fileID: 6884298442087897417, guid: b447a36aeb7722d4a94225035e37a5a7, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
@@ -1450,7 +1450,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
-  isRoundActive: 1
+  isRoundActive: 0
   enemysPrefabs:
   - {fileID: 6169395801979492314, guid: 06c4df976f07af347ae32dd75a1b200c, type: 3}
   enemySpawnPoints:
@@ -2261,6 +2261,10 @@ PrefabInstance:
     - target: {fileID: 4057998091643773850, guid: cd77a61083b7d654db181a2bd7293a17, type: 3}
       propertyPath: m_Name
       value: turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 4057998091643773850, guid: cd77a61083b7d654db181a2bd7293a17, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4057998091643773851, guid: cd77a61083b7d654db181a2bd7293a17, type: 3}
       propertyPath: m_RootOrder

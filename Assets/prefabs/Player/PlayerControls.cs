@@ -25,10 +25,10 @@ public class PlayerControls : NetworkBehaviour
         }
 
         // if(hasAutority)
-        if (Input.GetKey(KeyCode.Mouse0))
+        /*if (Input.GetKey(KeyCode.Mouse0))
         {
             Debug.Log("PlayerControls::Update::Input.GetButtonDown-1");
             gunController.Fire();
-        }
+        }*/
     }
 }
