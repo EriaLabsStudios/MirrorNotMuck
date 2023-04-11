@@ -586,7 +586,7 @@ MonoBehaviour:
   health: 70
   floatingTextPrefab: {fileID: 2636251682199716196, guid: 76c6466eb7d4353449d13cd83bfc38c4, type: 3}
   yOffset: 3
-  moveSpeed: 2
+  moveSpeed: 4
   chaseDistance: 200
   rotationSpeed: 5
   target: {fileID: 0}

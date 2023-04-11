@@ -31,6 +31,7 @@ public class GameController : NetworkBehaviour
             {
                 spawnEnemy();
                 nextEnemySpawn = Time.timeSinceLevelLoad + spawnRateEnemy;
+                spawnRateEnemy -= 0.05f;
             }
         }
        

@@ -37,7 +37,7 @@ public class EnemyAI : Damagable
         {
             Transform playerObject = GameObject.Find("PlayersParent").transform;
             GameObject closestPlayer = playerObject.GetChild(0).gameObject;
-            float distanceClosestPlayer = 0;
+            float distanceClosestPlayer = float.MaxValue;
             for(int x = 0; x < playerObject.childCount; x++)
             {
                 float distance = Vector3.Distance(playerObject.GetChild(x).position, transform.position);
@@ -47,7 +47,7 @@ public class EnemyAI : Damagable
                     distanceClosestPlayer = distance;
                 }
             }
-
+            Debug.Log($"[Server] player found {1}", closestPlayer);
             target = closestPlayer.transform;
 
             

@@ -208,7 +208,7 @@ public class PlayerControllerNet : NetworkBehaviour
         fric +=  (1 - direction.magnitude) * 2;
         fric = Mathf.Lerp(fric, lastfriction, 2 * Time.deltaTime);
         lastfriction = fric;
-        Debug.Log(fric);
+ 
         return fric;
     }
 
