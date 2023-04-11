@@ -35,8 +35,7 @@ public class LocalPlayerController : NetworkBehaviour
 
     private bool isSliding = false;
     private Vector3 slidingDir = Vector3.zero;
-    [SerializeField] private float jumpHeight = 1.0f;
-    [SerializeField] private float gravityValue = -9.81f;
+
 
     private Vector3 cameraInitPos;
 
