@@ -35,11 +35,22 @@ public class EnemyAI : Damagable
         // Buscar al jugador si no se ha asignado una referencia
         if (target == null)
         {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-            if (playerObject != null)
+            Transform playerObject = GameObject.Find("PlayersParent").transform;
+            GameObject closestPlayer = playerObject.GetChild(0).gameObject;
+            float distanceClosestPlayer = 0;
+            for(int x = 0; x < playerObject.childCount; x++)
             {
-                target = playerObject.transform;
+                float distance = Vector3.Distance(playerObject.GetChild(x).position, transform.position);
+                if (distance < distanceClosestPlayer)
+                {
+                    closestPlayer = playerObject.GetChild(x).gameObject;
+                    distanceClosestPlayer = distance;
+                }
             }
+
+            target = closestPlayer.transform;
+
+            
         }
         if (target != null && isAlive)
         {
@@ -69,7 +80,7 @@ public class EnemyAI : Damagable
             Debug.Log("Es un projectil " + collision.gameObject.tag);
             // Asumiendo que el proyectil tiene un componente de daño, puedes acceder a él así:
             NetworkIdentity ni = NetworkClient.connection.identity;
-            LocalPlayerController pc = ni.GetComponent<LocalPlayerController>();
+            PlayerControllerNet pc = ni.GetComponent<PlayerControllerNet>();
             //TODO: El daño instanciado en el enemigo y no en el arma?
             pc.CmdShootEnemy(this.gameObject, 20);
 
@@ -97,13 +108,13 @@ public class EnemyAI : Damagable
         health -= damage;
     }
 
-    void Die(LocalPlayerController attacker)
+    void Die(PlayerControllerNet attacker)
     {
         if(attacker !=null)attacker.AddScore(10);
         NetworkServer.Destroy(gameObject);
     }
 
-    public override void Damage(float damage, LocalPlayerController attacker)
+    public override void Damage(float damage, PlayerControllerNet attacker)
     {
         if(attacker != null) attacker.AddScore(1);
         UpdateHealthBar(base.health, health- damage);
@@ -116,14 +127,19 @@ public class EnemyAI : Damagable
             audioSource.clip = damagaSound;
             audioSource.Play();
             StartCoroutine(Dying(attacker));
+
+            Destroy(this);
         }
     }
-    private IEnumerator Dying(LocalPlayerController attacker)
+    private IEnumerator Dying(PlayerControllerNet attacker)
     {
         isAlive = false;
         agent.enabled = false;
         animator.enabled = false;
-        yield return new WaitForSeconds(2);
+        Vector3 force = transform.forward + transform.up;
+        gameObject.GetComponent<Rigidbody>().AddForce(-force * 500);
+        healthBar.gameObject.SetActive(false);
+        yield return new WaitForSeconds(5);
         Die(attacker);
     }
     

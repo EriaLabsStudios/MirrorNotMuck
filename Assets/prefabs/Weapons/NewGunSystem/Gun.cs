@@ -7,7 +7,7 @@ public class Gun : MonoBehaviour
 
     [Header("references")]
     [SerializeField] private GunData gunData;
-    [SerializeField] private LocalPlayerController player;
+    [SerializeField] private PlayerControllerNet player;
     [SerializeField] private Transform firePoint;
     [Header("Sound")]
     [SerializeField] private AudioClip fireSound;
@@ -19,14 +19,14 @@ public class Gun : MonoBehaviour
     [SerializeField] private ParticleSystem muzzleFlash;
     public Animator animator;
     private PlayerUIController playerUIController;
-    private LocalPlayerController playerLocalController;
+    private PlayerControllerNet playerLocalController;
     
     private float timeSinceLastShoot = 0;
     // Start is called before the first frame update
     void Start()
     {
         playerUIController = FindObjectOfType<PlayerUIController>();
-        playerLocalController = gameObject.transform.parent.GetComponent<LocalPlayerController>();
+        playerLocalController = gameObject.transform.parent.GetComponent<PlayerControllerNet>();
         playerUIController.UpdateBullets(gunData.currentAmmo);
         eventHandler();
         animator = GetComponent<Animator>();

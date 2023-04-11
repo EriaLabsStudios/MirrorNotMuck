@@ -10,7 +10,7 @@ public abstract class Damagable : NetworkBehaviour, IDamageable
     [SerializeField] protected float yOffset;
     
     
-    public virtual void Damage(float damage, LocalPlayerController player)
+    public virtual void Damage(float damage, PlayerControllerNet player)
     {
         
         health -= damage;

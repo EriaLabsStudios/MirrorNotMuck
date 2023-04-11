@@ -461,10 +461,11 @@ GameObject:
   - component: {fileID: 6439990350320446093}
   - component: {fileID: 4614211091894046805}
   - component: {fileID: 6978431388600598207}
-  - component: {fileID: 6978431388600598200}
   - component: {fileID: 6978431388600598193}
   - component: {fileID: 6978431388600598206}
   - component: {fileID: 7787765168802689110}
+  - component: {fileID: 2001543661}
+  - component: {fileID: 2001543653}
   m_Layer: 0
   m_Name: bulletManProto
   m_TagString: Enemy
@@ -550,19 +551,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &6978431388600598200
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6169395801979492314}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.8924928, y: 5.9061203, z: 2.3565562}
-  m_Center: {x: 0.011439361, y: 2.4530568, z: 0.10484885}
 --- !u!114 &6978431388600598193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -595,18 +583,61 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  health: 70
+  floatingTextPrefab: {fileID: 2636251682199716196, guid: 76c6466eb7d4353449d13cd83bfc38c4, type: 3}
+  yOffset: 3
   moveSpeed: 2
   chaseDistance: 200
   rotationSpeed: 5
   target: {fileID: 0}
-  health: 70
-  healthBar: {fileID: 1904725344}
-  floatingTextPrefab: {fileID: 2636251682199716196, guid: 76c6466eb7d4353449d13cd83bfc38c4, type: 3}
-  yOffset: 3
   audioSource: {fileID: 1619930151874959142}
   damagaSound: {fileID: 8300000, guid: 39d4866c5f1677a4caa2edd917cb0eb6, type: 3}
   deathSound: {fileID: 8300000, guid: 95bdf6b20af78c54c80b160370cfc351, type: 3}
+  healthBar: {fileID: 1904725344}
 --- !u!114 &7787765168802689110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6169395801979492314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 6833588354806074720}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
+--- !u!136 &2001543661
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6169395801979492314}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.0457268
+  m_Height: 7.250001
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.01, z: 0.10728194}
+--- !u!114 &2001543653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -15,7 +15,7 @@ public class GameController : NetworkBehaviour
     [SerializeField]
     Transform enemyParent;
 
-    float spawnRateEnemy = 10;
+    float spawnRateEnemy = 4;
     float nextEnemySpawn = 0;
 
 
@@ -37,7 +37,7 @@ public class GameController : NetworkBehaviour
     }
 
   
-    void CmdStartGame()
+    public void StartGame()
     {
         Debug.Log("[GameController] Start game ");
         isRoundActive = true;

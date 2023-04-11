@@ -4,7 +4,7 @@ using Mirror;
 using Mirror.SimpleWeb;
 using UnityEngine;
 
-public class LocalPlayerController : NetworkBehaviour
+public class PlayerControllerNet : NetworkBehaviour
 {
     [Header("Player Settings")]
     [SerializeField] private float playerSpeed = 2.0f;
@@ -36,37 +36,44 @@ public class LocalPlayerController : NetworkBehaviour
     private bool isSliding = false;
     private Vector3 slidingDir = Vector3.zero;
 
+    [SerializeField]
+    Transform firingPoint;
 
-    private Vector3 cameraInitPos;
+    GameController gameController;
 
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
+
+
     private PlayerUIController playerUIController;
-    public void AddScore(int points)
-    {
-        Log.Info("LocalPlayerController::AddScore before isLocalPlayer");
-        if (isLocalPlayer)
-        {
-            Log.Info("LocalPlayerController::AddScore after isLocalPlayer");
-            score += points;
-            playerUIController.UpdatePoints(score);
-        }
-    }
     private void Start()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Locked;
         controller = gameObject.GetComponent<CharacterController>();
         playerUIController = FindObjectOfType<PlayerUIController>();
         if (playerUIController == null)
         {
             Debug.LogError("PlayerUIController no se encuentra en la escena");
         }
-        cameraInitPos = cameraHolder.transform.position;
+
 
         if (isLocalPlayer)
         {
             mainCamera.gameObject.SetActive(true);
+        }
+
+        int screenWidth = Screen.width;
+        int screenHeight = Screen.height;
+
+        Vector2 centerScreenPosition = new Vector2(screenWidth / 2, screenHeight / 2);
+        Vector3 centerWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(centerScreenPosition.x, centerScreenPosition.y, mainCamera.nearClipPlane));
+        firingPoint.transform.position = centerWorldPosition + transform.forward;
+
+        Transform playersParent = GameObject.Find("PlayersParent").transform;
+
+        transform.SetParent(playersParent);
+        if (isServer)
+        {
+            gameController = GameObject.Find("GameController").GetComponent<GameController>();
         }
     }
 
@@ -77,9 +84,35 @@ public class LocalPlayerController : NetworkBehaviour
         HandleMovement();
         HandleCameraRotation();
         HandleVFX();
+        handleInputs();
+    }
+
+    public void AddScore(int points)
+    {
+        Log.Info("LocalPlayerController::AddScore before isLocalPlayer");
+        if (isLocalPlayer)
+        {
+            Log.Info("LocalPlayerController::AddScore after isLocalPlayer");
+            score += points;
+            playerUIController.UpdatePoints(score);
+        }
     }
 
 
+    private void handleInputs()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            CmdVoteStartRound();
+        }
+    }
+
+    [Command]
+    private void CmdVoteStartRound()
+    {
+        Debug.Log("[Server] start game");
+        gameController.StartGame();
+    }
 
     private void HandleVFX()
     {

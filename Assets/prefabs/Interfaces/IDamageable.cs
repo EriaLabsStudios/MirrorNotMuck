@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    void Damage(float damage, LocalPlayerController player);
+    void Damage(float damage, PlayerControllerNet player);
 }

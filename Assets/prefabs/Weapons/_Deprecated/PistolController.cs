@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PistolController : MonoBehaviour
 {
-    public LocalPlayerController player;
+    public PlayerControllerNet player;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float fireRate = 5f;
     [SerializeField] private float dispersion = 0.5f;
