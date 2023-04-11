@@ -26,7 +26,7 @@ public class LocalPlayerController : NetworkBehaviour
     public float moveSpeed = 5.0f;
     public float slideSpeed = 10.0f;
     public float friction = 0.5f;
-   
+    public float lastfriction = 0.5f;
     public Vector3 velocity;
 
     private bool isSliding = false;
@@ -64,65 +64,99 @@ public class LocalPlayerController : NetworkBehaviour
     {
 
     }
+    private void HandleSliding(Vector3 direction)
+    {
+
+
+        if (Input.GetKey(KeyCode.LeftControl) && !isSliding && controller.isGrounded && direction.magnitude > 0)
+        {
+            cameraHolder.transform.position -= new Vector3(0, 0.5f, 0);
+            isSliding = true;
+            slidingDir = direction.normalized;
+            velocity += direction.normalized * slideSpeed * Time.deltaTime;
+        }
+
+        if (isSliding)
+        {
+            velocity += slidingDir * slideSpeed * Time.deltaTime;
+        }
+    }
+
+    private int lastFrameSpaceBar = 0;
+    
+
+    private bool handleJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            lastFrameSpaceBar = Time.frameCount + 5;
+        }
+
+        if (Time.frameCount > lastFrameSpaceBar && lastFrameSpaceBar != 0)
+        {
+            lastFrameSpaceBar = 0;
+            return true;
+        }
+
+        return false;
+    }
     private void HandleMovement()
     {
     
         // Get input for movement direction
-        Vector3 direction = isSliding ? slidingDir : transform.forward * Input.GetAxis("Vertical") + transform.right * Input.GetAxis("Horizontal");
+        Vector3 direction =  new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        direction = isSliding ? slidingDir :transform.TransformDirection(direction);
+  
         // Apply movement direction to velocity
         if (direction.magnitude > 0)
         {
             velocity += direction.normalized * moveSpeed * Time.deltaTime;
 
-            if (Input.GetKey(KeyCode.LeftControl) && !isSliding && controller.isGrounded)
-            {
-                cameraHolder.transform.position -= new Vector3(0, 0.5f, 0);
-                isSliding = true;
-                slidingDir = direction.normalized;
-                velocity += direction.normalized * slideSpeed * Time.deltaTime;
-            }
         }
-
-       if(isSliding)
-        {
-            velocity += slidingDir * slideSpeed * Time.deltaTime;
-        }
-
-        if (Input.GetKey(KeyCode.Space) && controller.isGrounded)
-        {
-            velocity.y = 0;
-            velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-            if (isSliding)
-                cameraHolder.transform.position += new Vector3(0, 0.5f, 0);
-            isSliding = false;
-
-        
-        }
-
-        
-        if (controller.isGrounded)
-        {
-            // Apply friction and gravity to velocity
-            velocity.x *= 1 - friction * Time.deltaTime;
-            velocity.z *= 1 - friction * Time.deltaTime;   
-        }
-        else
-        {
-            Debug.Log("MENOS FRICCION");
-            velocity.x *= 1 - (friction/2) * Time.deltaTime;
-            velocity.z *= 1 - (friction/2) * Time.deltaTime;
-        }
+        HandleSliding(direction);
 
         if (!controller.isGrounded)
         {
             velocity.y += gravityValue * Time.deltaTime;
         }
-        
+        else velocity.y = -0.5f;
+
+
+
+        if (handleJump() && controller.isGrounded)
+        {
+            velocity.y = -0.5f;
+            velocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+            if (isSliding)
+                cameraHolder.transform.position += new Vector3(0, 0.5f, 0);
+            isSliding = false;    
+        }
+
+        var frictionLocal = handleFriction(direction);
+
+        velocity.x *= 1 - frictionLocal * Time.deltaTime;
+        velocity.z *= 1 - frictionLocal * Time.deltaTime;
         // Apply velocity to character controller
         controller.Move(velocity * Time.deltaTime);
         if (transform.position.y < -5) transform.position = respawnPos;
     }
  
+
+    private float handleFriction(Vector3 direction)
+    {
+        float fric = friction;
+  
+        if (!controller.isGrounded)
+        {
+            fric *= 0.8f;
+        }
+        fric +=  (1 - direction.magnitude) * 2;
+        fric = Mathf.Lerp(fric, lastfriction, 2 * Time.deltaTime);
+        lastfriction = fric;
+        Debug.Log(fric);
+        return fric;
+    }
 
     private void HandleCameraRotation()
     {

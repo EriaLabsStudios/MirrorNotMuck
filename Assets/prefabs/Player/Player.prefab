@@ -443,7 +443,7 @@ MonoBehaviour:
   weaponHolder: {fileID: 1996549127842853033}
   projectile: {fileID: 5656752764675818888, guid: 36d19f66c3fb26b488befc46ad79196c, type: 3}
   moveSpeed: 80
-  slideSpeed: 140
+  slideSpeed: 100
   friction: 10
   velocity: {x: 0, y: 0, z: 0}
   jumpHeight: 0.6
