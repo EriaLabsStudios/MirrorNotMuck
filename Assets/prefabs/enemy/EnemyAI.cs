@@ -7,28 +7,23 @@ using UnityEngine.AI;
 using TMPro;
 using Unity.VisualScripting;
 
-public class EnemyAI : NetworkBehaviour, IDamageable
+public class EnemyAI : Damagable
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float chaseDistance = 10f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private Transform target;
-
-    [SyncVar(hook = nameof(updateHealthBar))] [SerializeField]
-    private float health = 100;
-
     private NavMeshAgent agent;
     private Animator animator;
-    [SerializeField] Transform healthBar;
-    [SerializeField] private GameObject floatingTextPrefab;
-    [SerializeField] private float yOffset;
     [Header("Audio")] [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip damagaSound;
     [SerializeField] private AudioClip deathSound;
     private float deathTimer = 1f;
-
+    private bool isAlive;
+    [SerializeField] Transform healthBar;
     private void Start()
     {
+        isAlive= true;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
@@ -46,8 +41,7 @@ public class EnemyAI : NetworkBehaviour, IDamageable
                 target = playerObject.transform;
             }
         }
-
-        if (target != null)
+        if (target != null && isAlive)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, target.position);
 
@@ -85,7 +79,7 @@ public class EnemyAI : NetworkBehaviour, IDamageable
         }
     }
 
-    private void ShowFloatingText(int damage)
+    private void ShowFloatingText(float damage)
     {
         if (floatingTextPrefab != null)
         {
@@ -101,33 +95,41 @@ public class EnemyAI : NetworkBehaviour, IDamageable
         Debug.Log("Taken damage " + damage);
         ShowFloatingText(damage);
         health -= damage;
-
-        
     }
 
-    void updateHealthBar(float oldHealth, float newHealth)
+    void Die(LocalPlayerController attacker)
     {
-        var calculaHealthScale = (newHealth * 6) / 100;
-        healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
-    }
-
-
-    void Die()
-    {
-        // Lógica de muerte del enemigo (por ejemplo, animación de muerte, sonido, etc.)
+        if(attacker !=null)attacker.AddScore(10);
         NetworkServer.Destroy(gameObject);
     }
 
-    public void Damage(float damage)
+    public override void Damage(float damage, LocalPlayerController attacker)
     {
+        if(attacker != null) attacker.AddScore(1);
+        UpdateHealthBar(base.health, health- damage);
         health -= damage;
-        audioSource.clip = damagaSound;
+        ShowFloatingText(damage);
+        audioSource.clip = deathSound;
         audioSource.Play();
         if (health <= 0)
         {
-            audioSource.clip = deathSound;
+            audioSource.clip = damagaSound;
             audioSource.Play();
-            Die();
+            StartCoroutine(Dying(attacker));
         }
+    }
+    private IEnumerator Dying(LocalPlayerController attacker)
+    {
+        isAlive = false;
+        agent.enabled = false;
+        animator.enabled = false;
+        yield return new WaitForSeconds(2);
+        Die(attacker);
+    }
+    
+    protected void UpdateHealthBar(float oldHealth, float newHealth)
+    {
+        var calculaHealthScale = (newHealth * 6) / 100;
+        healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
     }
 }
