@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &992283480
 RectTransform:
   m_ObjectHideFlags: 0
@@ -787,7 +787,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -967,10 +967,10 @@ GameObject:
   - component: {fileID: 6884298442087897416}
   - component: {fileID: 6884298442087897421}
   - component: {fileID: 6884298442087897422}
-  - component: {fileID: 3037992968876522617}
   - component: {fileID: 1024607754614745005}
   - component: {fileID: 2021848047}
   - component: {fileID: 4665120111973735663}
+  - component: {fileID: 4983341201030299949}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1045,35 +1045,6 @@ MonoBehaviour:
   lastfriction: 0.5
   velocity: {x: 0, y: 0, z: 0}
   firingPoint: {fileID: 165526831814349780}
---- !u!114 &3037992968876522617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6884298442087897417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 1
-  syncMode: 0
-  syncInterval: 0
-  target: {fileID: 46769557941180821}
-  clientAuthority: 0
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  showGizmos: 1
-  showOverlay: 1
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
-  onlySyncOnChange: 1
-  onlySyncOnChangeCorrectionMultiplier: 2
-  rotationSensitivity: 0.01
-  compressRotation: 0
-  positionPrecision: 0.01
-  scalePrecision: 0.01
 --- !u!143 &1024607754614745005
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1100,7 +1071,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6884298442087897417}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 904690dff33c9cd4e802c21bdd3292e6, type: 2}
   m_CullingMode: 0
@@ -1128,6 +1099,35 @@ MonoBehaviour:
   bulletsText: {fileID: 1300104317}
   healthText: {fileID: 1377325560}
   pointsText: {fileID: 1148427672}
+--- !u!114 &4983341201030299949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6884298442087897417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 6884298442087897416}
+  clientAuthority: 0
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1001 &165526831546345065
 PrefabInstance:
   m_ObjectHideFlags: 0

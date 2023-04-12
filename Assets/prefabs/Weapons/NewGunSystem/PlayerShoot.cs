@@ -10,6 +10,8 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
     [SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
     // Update is called once per frame
+
+   
     void Update()
     {
         if(Input.GetKeyDown(shootKey)) shootInput?.Invoke();

@@ -20,7 +20,7 @@ public class EnemyAI : Damagable
     [SerializeField] private AudioClip deathSound;
     private float deathTimer = 1f;
     private bool isAlive;
-    [SerializeField] Transform healthBar;
+
     private void Start()
     {
         isAlive= true;
@@ -36,7 +36,7 @@ public class EnemyAI : Damagable
         if (target == null)
         {
             Transform playerObject = GameObject.Find("PlayersParent").transform;
-            GameObject closestPlayer = playerObject.GetChild(0).gameObject;
+            GameObject closestPlayer = null;
             float distanceClosestPlayer = float.MaxValue;
             for(int x = 0; x < playerObject.childCount; x++)
             {
@@ -47,6 +47,8 @@ public class EnemyAI : Damagable
                     distanceClosestPlayer = distance;
                 }
             }
+        
+            if (closestPlayer == null) return;
             Debug.Log($"[Server] player found {1}", closestPlayer);
             target = closestPlayer.transform;
 
@@ -60,7 +62,7 @@ public class EnemyAI : Damagable
             {
                 agent.SetDestination(target.position);
                 float speed = agent.velocity.magnitude / agent.speed;
-                animator.SetFloat("Speed", speed);
+                RpcUpdateAnimation(speed);
                 Vector3 direction = (target.position - transform.position).normalized;
                 Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
@@ -68,9 +70,16 @@ public class EnemyAI : Damagable
             else
             {
                 agent.ResetPath();
-                animator.SetFloat("Speed", 0f);
+                RpcUpdateAnimation(0);
             }
         }
+    }
+       
+    [ClientRpc]
+    void RpcUpdateAnimation(float speed)
+    {
+        if(animator != null)
+        animator.SetFloat("Speed", speed);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -101,7 +110,7 @@ public class EnemyAI : Damagable
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         Debug.Log("Taken damage " + damage);
         ShowFloatingText(damage);
@@ -110,12 +119,15 @@ public class EnemyAI : Damagable
 
     void Die(PlayerControllerNet attacker)
     {
-        if(attacker !=null)attacker.AddScore(10);
+        Debug.Log("[Server][EnemyAI] Die");
         NetworkServer.Destroy(gameObject);
+        if (attacker !=null)attacker.AddScore(10);
+       
     }
 
     public override void Damage(float damage, PlayerControllerNet attacker)
     {
+        Debug.Log("[Server] enemyAi Damaged " + damage);
         if(attacker != null) attacker.AddScore(1);
         UpdateHealthBar(base.health, health- damage);
         health -= damage;
@@ -127,25 +139,20 @@ public class EnemyAI : Damagable
             audioSource.clip = damagaSound;
             audioSource.Play();
             StartCoroutine(Dying(attacker));
-
-            Destroy(this);
         }
     }
     private IEnumerator Dying(PlayerControllerNet attacker)
     {
+        Debug.Log("[Server][EnemyAI] Dying");
         isAlive = false;
         agent.enabled = false;
         animator.enabled = false;
         Vector3 force = transform.forward + transform.up;
         gameObject.GetComponent<Rigidbody>().AddForce(-force * 500);
-        healthBar.gameObject.SetActive(false);
-        yield return new WaitForSeconds(5);
+   
+        yield return new WaitForSeconds(3);
         Die(attacker);
     }
     
-    protected void UpdateHealthBar(float oldHealth, float newHealth)
-    {
-        var calculaHealthScale = (newHealth * 6) / 100;
-        healthBar.localScale = new Vector3(calculaHealthScale, 0.43801f, 0.34225f);
-    }
+
 }

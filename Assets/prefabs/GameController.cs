@@ -15,7 +15,7 @@ public class GameController : NetworkBehaviour
     [SerializeField]
     Transform enemyParent;
 
-    float spawnRateEnemy = 4;
+    float spawnRateEnemy = 10;
     float nextEnemySpawn = 0;
 
 

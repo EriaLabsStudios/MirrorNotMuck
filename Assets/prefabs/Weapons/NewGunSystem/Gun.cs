@@ -26,7 +26,7 @@ public class Gun : MonoBehaviour
     void Start()
     {
         playerUIController = FindObjectOfType<PlayerUIController>();
-        playerLocalController = gameObject.transform.parent.GetComponent<PlayerControllerNet>();
+        playerLocalController = gameObject.transform.parent.parent.parent.GetComponent<PlayerControllerNet>();
         playerUIController.UpdateBullets(gunData.currentAmmo);
         eventHandler();
         animator = GetComponent<Animator>();
@@ -63,6 +63,7 @@ public class Gun : MonoBehaviour
     
     public void Shoot()
     {
+        
         Debug.Log($"Gun:Shoot Pre Pew");
         playerUIController.UpdateBullets(gunData.currentAmmo);
         if (gunData.currentAmmo > 0)
@@ -76,8 +77,7 @@ public class Gun : MonoBehaviour
                 if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hitInfo, gunData.maxDistance))
                 {
                     Debug.Log($"Gun:Shoot - Raycast trasform collided:  {hitInfo.transform.name}");
-                    IDamageable damageable = hitInfo.transform.GetComponent<IDamageable>();
-                    damageable?.Damage(gunData.damage, playerLocalController);
+                    playerLocalController.CmdShootEnemy(hitInfo.transform.gameObject, gunData.damage);
                 }
                 gunData.currentAmmo--;
                 timeSinceLastShoot = 0;

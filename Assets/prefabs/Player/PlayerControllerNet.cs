@@ -43,17 +43,17 @@ public class PlayerControllerNet : NetworkBehaviour
 
 
 
-    private PlayerUIController playerUIController;
+   // private PlayerUIController playerUIController;
     private void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         controller = gameObject.GetComponent<CharacterController>();
-        playerUIController = FindObjectOfType<PlayerUIController>();
+      /*  playerUIController = FindObjectOfType<PlayerUIController>();
         if (playerUIController == null)
         {
             Debug.LogError("PlayerUIController no se encuentra en la escena");
-        }
+        }*/
 
 
         if (isLocalPlayer)
@@ -70,16 +70,16 @@ public class PlayerControllerNet : NetworkBehaviour
 
         Transform playersParent = GameObject.Find("PlayersParent").transform;
 
-        transform.SetParent(playersParent);
-        if (isServer)
-        {
+       transform.SetParent(playersParent);
+            if(isServer)
             gameController = GameObject.Find("GameController").GetComponent<GameController>();
-        }
+       
+
     }
 
     private void Update()
     {
-        if (!isLocalPlayer) return;
+       if (!isOwned) return;
 
         HandleMovement();
         HandleCameraRotation();
@@ -94,7 +94,7 @@ public class PlayerControllerNet : NetworkBehaviour
         {
             Log.Info("LocalPlayerController::AddScore after isLocalPlayer");
             score += points;
-            playerUIController.UpdatePoints(score);
+        //    playerUIController.UpdatePoints(score);
         }
     }
 
@@ -113,7 +113,7 @@ public class PlayerControllerNet : NetworkBehaviour
         Debug.Log("[Server] start game");
         gameController.StartGame();
     }
-
+    
     private void HandleVFX()
     {
 
@@ -156,7 +156,7 @@ public class PlayerControllerNet : NetworkBehaviour
     }
     private void HandleMovement()
     {
-    
+   
         // Get input for movement direction
         Vector3 direction =  new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
@@ -194,6 +194,8 @@ public class PlayerControllerNet : NetworkBehaviour
         // Apply velocity to character controller
         controller.Move(velocity * Time.deltaTime);
         if (transform.position.y < -5) transform.position = respawnPos;
+
+       
     }
  
 
@@ -225,10 +227,17 @@ public class PlayerControllerNet : NetworkBehaviour
     }
 
     [Command]
-    public void CmdShootEnemy(GameObject enemy, int damage)
+    public void CmdShootEnemy(GameObject enemy, float damage)
     {
-        if (enemy != null)
-            enemy.GetComponent<EnemyAI>().TakeDamage(damage);
+        Debug.Log("[Server] Damage enemy " + enemy + " damage " + damage);
+        if (enemy == null) return;  
+        
+        IDamageable damageable = enemy.transform.GetComponent<IDamageable>();
+        if(damageable == null) return;
+        
+        damageable?.Damage(damage, this);
+        
+
     }
 
     [Command]
