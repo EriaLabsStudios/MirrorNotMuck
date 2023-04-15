@@ -67,8 +67,12 @@ public class PlayerControllerNet : NetworkBehaviour
         Vector2 centerScreenPosition = new Vector2(screenWidth / 2, screenHeight / 2);
         Vector3 centerWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(centerScreenPosition.x, centerScreenPosition.y, mainCamera.nearClipPlane));
         firingPoint.transform.position = centerWorldPosition + transform.forward;
+        Transform playersParent;
+        if (isLocalPlayer && isOwned)
+        {     playersParent = GameObject.Find("LocalPlayer").transform;
 
-        Transform playersParent = GameObject.Find("PlayersParent").transform;
+        }else
+        playersParent = GameObject.Find("PlayersParent").transform;
 
        transform.SetParent(playersParent);
             if(isServer)

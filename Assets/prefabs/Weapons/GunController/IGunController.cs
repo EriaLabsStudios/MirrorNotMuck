@@ -4,11 +4,11 @@ using UnityEngine;
 
 public interface IGunController
 {
-    void shootEvent();
-    void shootProjectile();
-    bool canShoot();
-    void reload();
-    void equip();
-    void unEquip();
-    bool isReloading();
+    void ShootEvent();
+    void ShootProjectile();
+    bool CanShoot();
+    IEnumerator Reload();
+    void Equip();
+    void UnEquip();
+    bool IsReloading();
 }
