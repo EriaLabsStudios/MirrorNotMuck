@@ -227,6 +227,8 @@ MonoBehaviour:
   playerOwner: {fileID: 0}
   isEquiped: 0
   animator: {fileID: 0}
+  viewPortPosition: {x: 0.131, y: -0.02, z: 0.081}
+  viewPortRotation: {x: -0.395, y: 88.405, z: 5.994}
 --- !u!1 &6650470630134122455
 GameObject:
   m_ObjectHideFlags: 0

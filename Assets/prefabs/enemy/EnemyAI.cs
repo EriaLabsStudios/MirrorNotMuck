@@ -35,6 +35,7 @@ public class EnemyAI : Damagable
         // Buscar al jugador si no se ha asignado una referencia
         if (target == null)
         {
+            Debug.Log("[Server][EnemyAI] Search for player");
             Transform playerObject = GameObject.Find("PlayersParent").transform;
             GameObject closestPlayer = null;
             float distanceClosestPlayer = float.MaxValue;
@@ -47,7 +48,17 @@ public class EnemyAI : Damagable
                     distanceClosestPlayer = distance;
                 }
             }
-        
+
+            if (closestPlayer == null)
+            {
+                Transform localPlayer = GameObject.Find("LocalPlayer").transform;
+                float distance = Vector3.Distance(localPlayer.GetChild(0).position, transform.position);
+                if (distance < distanceClosestPlayer)
+                {
+                    closestPlayer = localPlayer.GetChild(0).gameObject;
+                }
+            }
+
             if (closestPlayer == null) return;
             Debug.Log($"[Server] player found {1}", closestPlayer);
             target = closestPlayer.transform;

@@ -36,8 +36,6 @@ public class PlayerControllerNet : NetworkBehaviour
     private bool isSliding = false;
     private Vector3 slidingDir = Vector3.zero;
 
-    [SerializeField]
-    Transform firingPoint;
 
     GameController gameController;
 
@@ -61,12 +59,6 @@ public class PlayerControllerNet : NetworkBehaviour
             mainCamera.gameObject.SetActive(true);
         }
 
-        int screenWidth = Screen.width;
-        int screenHeight = Screen.height;
-
-        Vector2 centerScreenPosition = new Vector2(screenWidth / 2, screenHeight / 2);
-        Vector3 centerWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(centerScreenPosition.x, centerScreenPosition.y, mainCamera.nearClipPlane));
-        firingPoint.transform.position = centerWorldPosition + transform.forward;
         Transform playersParent;
         if (isLocalPlayer && isOwned)
         {     playersParent = GameObject.Find("LocalPlayer").transform;
