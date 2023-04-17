@@ -10,13 +10,21 @@ public class GunController : NetworkBehaviour, IGunController
     private float range, damage, fireRate, reloadTime;
     private float reloadingTime;
 
-
+    [SerializeField] private GameObject trailObject;
     [SerializeField]
     PlayerControllerNet playerOwner;
     private float timeSinceLastShoot;
     private bool reloading;
-
-
+    
+    public enum WeaponType
+        {
+            SemiAutomatic,
+            Automatic,
+            BoltAction
+        }
+    
+    [SerializeField] private WeaponType weaponType;
+    
     //Synced vars
     [SyncVar]
     public bool isEquiped = false;
@@ -42,7 +50,8 @@ public class GunController : NetworkBehaviour, IGunController
     {
         Debug.Log("Gun::eventHandler");
         if (isClient) {
-            PlayerShoot.shootInput += ShootEvent;
+            if(weaponType==WeaponType.SemiAutomatic) PlayerShoot.singleShootInput += ShootEvent;
+            if(weaponType==WeaponType.Automatic) PlayerShoot.autoShootInput += ShootEvent;
             PlayerShoot.reloadInput += StartReload;
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -126,22 +135,49 @@ public class GunController : NetworkBehaviour, IGunController
     [Server]
     public void ShootProjectile(Vector3 origin, Vector3 direction)
     {
+        Vector3 endPoint = default;
         if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, range))
         {
+            endPoint = hitInfo.point;
             Debug.Log($"Gun:Shoot - Raycast trasform collided:  {hitInfo.transform.name}");
             if (hitInfo.transform.gameObject.CompareTag("Enemy"))
             {
                 if (hitInfo.transform.gameObject == null) return;
                 IDamageable damageable = hitInfo.transform.gameObject.transform.GetComponent<IDamageable>();
                 if (damageable == null) return;
-               
                 damageable?.Damage(damage, playerOwner);
+                endPoint = hitInfo.point;
             }
-       
         }
+        else
+        {
+            endPoint = origin + direction * range;
+        }
+            
+        // Instancia el objeto TrailRenderer
+        GameObject trailInstance = Instantiate(trailObject, origin, Quaternion.identity);
+        TrailRenderer trailRenderer = trailInstance.GetComponent<TrailRenderer>();
+
+        // Inicia la Coroutine para mover el objeto a lo largo de la trayectoria del raycast
+        StartCoroutine(MoveTrail(trailInstance, endPoint, 0.5f));
         Debug.DrawRay(origin, direction * range,Color.red,500);
     }
+    [Server]
+    private IEnumerator MoveTrail(GameObject trailInstance, Vector3 targetPosition, float duration)
+    {
+        float elapsedTime = 0f;
+        Vector3 startPosition = trailInstance.transform.position;
 
+        while (elapsedTime < duration)
+        {
+            trailInstance.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Destruye el objeto TrailRenderer después de un tiempo para que no se acumulen
+        Destroy(trailInstance, 1f);
+    }
 
     [Command(requiresAuthority = false)]
     public  void CmdsetServerParent(Transform parent)
