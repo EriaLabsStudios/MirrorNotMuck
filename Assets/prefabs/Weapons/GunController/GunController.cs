@@ -7,9 +7,9 @@ public class GunController : NetworkBehaviour, IGunController
     [SerializeField]
     private int maxAmmo, currentAmmo, magazineSize;
     [SerializeField]
-    private float range, damage, fireRate, reloadingTime, reloadTime;
-    [SerializeField]
-    private Transform firingPoint;
+    private float range, damage, fireRate, reloadTime;
+    private float reloadingTime;
+
 
     [SerializeField]
     PlayerControllerNet playerOwner;
@@ -164,7 +164,7 @@ public class GunController : NetworkBehaviour, IGunController
         if (CanShoot() && isOwned)
         {
             Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
-            Debug.Log($"[Client][GunController] CanShoot true  firingpoint: {firingPoint}");
+      
             CmdshootEventServer(ray.origin, ray.direction);
             currentAmmo--;
             timeSinceLastShoot = 0;
