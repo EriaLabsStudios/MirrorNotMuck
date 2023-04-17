@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IGunController
 {
     void ShootEvent();
-    void ShootProjectile();
+    void ShootProjectile(Vector3 origin, Vector3 direction);
     bool CanShoot();
     IEnumerator Reload();
     void Equip();

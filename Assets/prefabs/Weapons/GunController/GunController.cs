@@ -71,12 +71,25 @@ public class GunController : NetworkBehaviour, IGunController
         throw new System.NotImplementedException();
     }
 
+    [Command]
+    public void CmdReload()
+    {
+        currentAmmo = magazineSize;
+    }
+
+    [Command]
+    public void CmdSyncAnimation(string anim)
+    {
+        RpcSetAnimTrigger(anim);
+    }
+ 
+
 
 
     [Command]
-    public void CmdshootEventServer()
+    public void CmdshootEventServer(Vector3 origin, Vector3 direction)
     {
-        Debug.Log($"[Server][GunController] CmdshootEventServer");
+        Debug.Log($"[Server][GunController] CmdshootEventServer {origin}");
 
         if (currentAmmo > 0)
         {
@@ -88,7 +101,7 @@ public class GunController : NetworkBehaviour, IGunController
                 currentAmmo--;
                 RpcVFXShoot();
                 RpcUpdateAmmoUI(currentAmmo);
-                ShootProjectile();
+                ShootProjectile(origin,direction);
                 timeSinceLastShoot = 0;
                 timeSinceLastShoot -= Time.deltaTime;
 
@@ -111,9 +124,9 @@ public class GunController : NetworkBehaviour, IGunController
 
 
     [Server]
-    public void ShootProjectile()
+    public void ShootProjectile(Vector3 origin, Vector3 direction)
     {
-        if (Physics.Raycast(firingPoint.position, firingPoint.forward, out RaycastHit hitInfo, range))
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, range))
         {
             Debug.Log($"Gun:Shoot - Raycast trasform collided:  {hitInfo.transform.name}");
             if (hitInfo.transform.gameObject.CompareTag("Enemy"))
@@ -126,7 +139,7 @@ public class GunController : NetworkBehaviour, IGunController
             }
        
         }
-        Debug.DrawRay(firingPoint.position, firingPoint.forward * range,Color.red,500);
+        Debug.DrawRay(origin, direction * range,Color.red,500);
     }
 
 
@@ -134,7 +147,7 @@ public class GunController : NetworkBehaviour, IGunController
     public  void CmdsetServerParent(Transform parent)
     {
         Debug.Log("[Server][GunController ] CmdsetServerParent " + parent.name);
-        transform.SetParent(parent);
+        transform.SetParent(parent.GetChild(0).GetChild(0));
         transform.localPosition = viewPortPosition;
         transform.localRotation = Quaternion.Euler(viewPortRotation);
     }
@@ -150,8 +163,9 @@ public class GunController : NetworkBehaviour, IGunController
         Debug.Log($"[Client][GunController] shootEvent " + CanShoot()); ;
         if (CanShoot() && isOwned)
         {
-            Debug.Log($"[Client][GunController] CanShoot true");
-            CmdshootEventServer();
+            Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+            Debug.Log($"[Client][GunController] CanShoot true  firingpoint: {firingPoint}");
+            CmdshootEventServer(ray.origin, ray.direction);
             currentAmmo--;
             timeSinceLastShoot = 0;
        
@@ -186,10 +200,10 @@ public class GunController : NetworkBehaviour, IGunController
     [Client]
     public IEnumerator Reload()
     {
- 
+        CmdSyncAnimation("Reload");
         reloading = true;
         yield return new WaitForSeconds(reloadTime);
-        currentAmmo = magazineSize;
+        CmdReload();
         reloading = false;
     }
     [Client]
@@ -198,7 +212,7 @@ public class GunController : NetworkBehaviour, IGunController
         if (!reloading && isOwned && isEquiped)
         {
             PlaySound(2);
-            RpcSetAnimTrigger("Reload");
+         //   RpcSetAnimTrigger("Reload"); No se puede llamar a RPC desde el cliente
             StartCoroutine(Reload());
         }
     }
@@ -211,8 +225,6 @@ public class GunController : NetworkBehaviour, IGunController
         if (Vector3.Distance(localPlayer.transform.position,transform.position) < 1)
         {
             CmdAssignWeapon(localPlayer.GetComponent<NetworkIdentity>());
-            GetComponent<NetworkIdentity>().RemoveClientAuthority();
-            GetComponent<NetworkIdentity>().AssignClientAuthority(localPlayer.GetComponent<NetworkIdentity>().connectionToClient);
             playerOwner = localPlayer.GetComponent<PlayerControllerNet>();
 
             Debug.Log("[EQUIP][Client] " + localPlayer);
@@ -221,30 +233,7 @@ public class GunController : NetworkBehaviour, IGunController
             transform.localRotation = Quaternion.Euler(viewPortRotation);
 
             CmdsetServerParent(localPlayer.transform);
-
-            calculateFiringPoint();
         }
-    }
-
-    [Command]
-    void CmdSetFiringPoint(Vector3 pos)
-    {
-        firingPoint.transform.position = pos;
-    }
-
-    void calculateFiringPoint()
-    {
-
-        int screenWidth = Screen.width;
-        int screenHeight = Screen.height;
-
-        Vector2 centerScreenPosition = new Vector2(screenWidth / 2, screenHeight / 2);
-        Vector3 centerWorldPosition = playerOwner.mainCamera.ScreenToWorldPoint(new Vector3(centerScreenPosition.x, centerScreenPosition.y, playerOwner.mainCamera.nearClipPlane));
-        firingPoint.transform.position = centerWorldPosition + firingPoint.forward;
-
-        Debug.DrawRay(centerWorldPosition, firingPoint.forward * range, Color.green, 500);
-
-        CmdSetFiringPoint(firingPoint.transform.position);
     }
 
 
