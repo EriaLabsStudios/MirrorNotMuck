@@ -199,6 +199,7 @@ public class GunController : NetworkBehaviour, IGunController
         Debug.Log($"[Client][GunController] shootEvent " + CanShoot()); ;
         if (CanShoot() && isOwned)
         {
+            CmdSyncAnimation("Shoot");
             Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
       
             CmdshootEventServer(ray.origin, ray.direction);
