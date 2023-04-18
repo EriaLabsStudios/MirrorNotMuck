@@ -2,30 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using System;
-
 public class GunController : NetworkBehaviour, IGunController
 {
     [SerializeField]
-    private int magazineSize;
-    private int currentAmmo;
-
+    private int maxAmmo, currentAmmo, magazineSize;
     [SerializeField]
     private float range, damage, fireRate, reloadTime;
+    private float reloadingTime;
 
+    [SerializeField] private GameObject trailObject;
     [SerializeField]
     PlayerControllerNet playerOwner;
     private float timeSinceLastShoot;
     private bool reloading;
-
+    
+    public enum WeaponType
+        {
+            SemiAutomatic,
+            Automatic,
+            BoltAction
+        }
+    
+    [SerializeField] private WeaponType weaponType;
+    
     //Synced vars
     [SyncVar]
     public bool isEquiped = false;
 
     //Client vars
-    [Header("Client Settings")]
     [SerializeField] private ParticleSystem muzzleFlash;
-
+    [SerializeField]
 
     Animator animator;
     [SerializeField]
@@ -39,19 +45,13 @@ public class GunController : NetworkBehaviour, IGunController
     AudioClip[] sounds;
     AudioSource audioSource;
 
-    [SerializeField]
-    ShootingType shootingType = ShootingType.Manual;
-
-
-    bool isShooting = false;
-    bool manualShootKeyDown = false;
 
     void Start()
     {
         Debug.Log("Gun::eventHandler");
         if (isClient) {
-            PlayerShoot.shootInputDown += ShootEventDown;
-            PlayerShoot.shootInputUp += ShootEventUp;
+            if(weaponType==WeaponType.SemiAutomatic) PlayerShoot.singleShootInput += ShootEvent;
+            if(weaponType==WeaponType.Automatic) PlayerShoot.autoShootInput += ShootEvent;
             PlayerShoot.reloadInput += StartReload;
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -61,23 +61,16 @@ public class GunController : NetworkBehaviour, IGunController
     private void Update()
     {
         timeSinceLastShoot += Time.deltaTime;
-
-        if (!isClient) return;
-        if (Input.GetKey(KeyCode.E))
+        if (isClient && Input.GetKey(KeyCode.E))
         {
             if (!isEquiped) Equip();
         }
-
-        if (isShooting) ShootEvent();
-
-
-  
 
     }
 
     public bool CanShoot()
     {
-        Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwned {isOwned} isEquiped {isEquiped}");
+        Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwwned {isOwned} isEquiped {isEquiped}");
         return !reloading && timeSinceLastShoot > 1f / (fireRate / 60) && isEquiped;
     }
 
@@ -142,22 +135,48 @@ public class GunController : NetworkBehaviour, IGunController
     [Server]
     public void ShootProjectile(Vector3 origin, Vector3 direction)
     {
+        Vector3 endPoint = default;
         if (Physics.Raycast(origin, direction, out RaycastHit hitInfo, range))
         {
+            endPoint = hitInfo.point;
             Debug.Log($"Gun:Shoot - Raycast trasform collided:  {hitInfo.transform.name}");
             if (hitInfo.transform.gameObject.CompareTag("Enemy"))
             {
                 if (hitInfo.transform.gameObject == null) return;
                 IDamageable damageable = hitInfo.transform.gameObject.transform.GetComponent<IDamageable>();
                 if (damageable == null) return;
-               
                 damageable?.Damage(damage, playerOwner);
+                endPoint = hitInfo.point;
             }
-       
         }
-        Debug.DrawRay(origin, direction * range,Color.red,500);
-    }
+        else
+        {
+            endPoint = origin + direction * range;
+        }
+            
+        GameObject trailInstance = Instantiate(trailObject, origin, Quaternion.identity);
+        float trailSpeed = 200f; 
+        float distance = Vector3.Distance(origin, endPoint);
+        float duration = distance / trailSpeed;
 
+        StartCoroutine(MoveTrail(trailInstance, endPoint, duration));
+    }
+    [Server]
+    private IEnumerator MoveTrail(GameObject trailInstance, Vector3 targetPosition, float duration)
+    {
+        float elapsedTime = 0f;
+        Vector3 startPosition = trailInstance.transform.position;
+
+        while (elapsedTime < duration)
+        {
+            trailInstance.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Destruye el objeto TrailRenderer después de un tiempo para que no se acumulen
+        Destroy(trailInstance, 1f);
+    }
 
     [Command(requiresAuthority = false)]
     public  void CmdsetServerParent(Transform parent)
@@ -177,63 +196,16 @@ public class GunController : NetworkBehaviour, IGunController
     public void ShootEvent()
     {
         Debug.Log($"[Client][GunController] shootEvent " + CanShoot()); ;
-        if (CanShoot() && isOwned && shootingTypeValidate())
-            Shoot();
-
-    }
-
-    public void Shoot()
-    {
-        Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
-
-        CmdshootEventServer(ray.origin, ray.direction);
-        currentAmmo--;
-        timeSinceLastShoot = 0;
-    }
-
-    [Client]
-    public bool shootingTypeValidate()
-    {
-        if (shootingType.Equals(ShootingType.Automatic))
+        if (CanShoot() && isOwned)
         {
-            return true;
-
-        }else if (shootingType.Equals(ShootingType.Semi))
-        {
-            Shoot();
-            Shoot();
-            return true;
-
+            CmdSyncAnimation("Shoot");
+            Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+      
+            CmdshootEventServer(ray.origin, ray.direction);
+            currentAmmo--;
+            timeSinceLastShoot = 0;
+       
         }
-        else if (shootingType.Equals(ShootingType.Manual))
-        {
-            if (!manualShootKeyDown)
-            {
-                manualShootKeyDown = true;
-                return true;
-            }
-            else return false;
-
-
-
-        }
-
-
-        return false;
-    }
-
-    [Client]
-    public void ShootEventUp()
-    {
-        isShooting = false;
-        manualShootKeyDown = false;
-
-    }
-    [Client]
-    public void ShootEventDown()
-    {
-    
-        isShooting = true;
     }
 
     [ClientRpc]

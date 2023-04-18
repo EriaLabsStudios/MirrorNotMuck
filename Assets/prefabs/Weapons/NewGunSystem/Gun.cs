@@ -36,7 +36,7 @@ public class Gun : MonoBehaviour
     private void eventHandler()
     {
         Debug.Log("Gun::eventHandler");
-        PlayerShoot.shootInputDown += Shoot;
+        PlayerShoot.singleShootInput += Shoot;
         PlayerShoot.reloadInput += StartReload;
     }
 
