@@ -2,28 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System;
+
 public class GunController : NetworkBehaviour, IGunController
 {
     [SerializeField]
-    private int maxAmmo, currentAmmo, magazineSize;
+    private int magazineSize;
+    private int currentAmmo;
+
     [SerializeField]
     private float range, damage, fireRate, reloadTime;
-    private float reloadingTime;
-
 
     [SerializeField]
     PlayerControllerNet playerOwner;
     private float timeSinceLastShoot;
     private bool reloading;
 
-
     //Synced vars
     [SyncVar]
     public bool isEquiped = false;
 
     //Client vars
+    [Header("Client Settings")]
     [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField]
+
 
     Animator animator;
     [SerializeField]
@@ -37,12 +39,19 @@ public class GunController : NetworkBehaviour, IGunController
     AudioClip[] sounds;
     AudioSource audioSource;
 
+    [SerializeField]
+    ShootingType shootingType = ShootingType.Manual;
+
+
+    bool isShooting = false;
+    bool manualShootKeyDown = false;
 
     void Start()
     {
         Debug.Log("Gun::eventHandler");
         if (isClient) {
-            PlayerShoot.shootInput += ShootEvent;
+            PlayerShoot.shootInputDown += ShootEventDown;
+            PlayerShoot.shootInputUp += ShootEventUp;
             PlayerShoot.reloadInput += StartReload;
             animator = GetComponent<Animator>();
             audioSource = GetComponent<AudioSource>();
@@ -52,16 +61,23 @@ public class GunController : NetworkBehaviour, IGunController
     private void Update()
     {
         timeSinceLastShoot += Time.deltaTime;
-        if (isClient && Input.GetKey(KeyCode.E))
+
+        if (!isClient) return;
+        if (Input.GetKey(KeyCode.E))
         {
             if (!isEquiped) Equip();
         }
+
+        if (isShooting) ShootEvent();
+
+
+  
 
     }
 
     public bool CanShoot()
     {
-        Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwwned {isOwned} isEquiped {isEquiped}");
+        Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwned {isOwned} isEquiped {isEquiped}");
         return !reloading && timeSinceLastShoot > 1f / (fireRate / 60) && isEquiped;
     }
 
@@ -161,15 +177,63 @@ public class GunController : NetworkBehaviour, IGunController
     public void ShootEvent()
     {
         Debug.Log($"[Client][GunController] shootEvent " + CanShoot()); ;
-        if (CanShoot() && isOwned)
+        if (CanShoot() && isOwned && shootingTypeValidate())
+            Shoot();
+
+    }
+
+    public void Shoot()
+    {
+        Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
+
+        CmdshootEventServer(ray.origin, ray.direction);
+        currentAmmo--;
+        timeSinceLastShoot = 0;
+    }
+
+    [Client]
+    public bool shootingTypeValidate()
+    {
+        if (shootingType.Equals(ShootingType.Automatic))
         {
-            Ray ray = playerOwner.mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f, 0f));
-      
-            CmdshootEventServer(ray.origin, ray.direction);
-            currentAmmo--;
-            timeSinceLastShoot = 0;
-       
+            return true;
+
+        }else if (shootingType.Equals(ShootingType.Semi))
+        {
+            Shoot();
+            Shoot();
+            return true;
+
         }
+        else if (shootingType.Equals(ShootingType.Manual))
+        {
+            if (!manualShootKeyDown)
+            {
+                manualShootKeyDown = true;
+                return true;
+            }
+            else return false;
+
+
+
+        }
+
+
+        return false;
+    }
+
+    [Client]
+    public void ShootEventUp()
+    {
+        isShooting = false;
+        manualShootKeyDown = false;
+
+    }
+    [Client]
+    public void ShootEventDown()
+    {
+    
+        isShooting = true;
     }
 
     [ClientRpc]
