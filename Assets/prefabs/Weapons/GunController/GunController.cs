@@ -154,13 +154,12 @@ public class GunController : NetworkBehaviour, IGunController
             endPoint = origin + direction * range;
         }
             
-        // Instancia el objeto TrailRenderer
         GameObject trailInstance = Instantiate(trailObject, origin, Quaternion.identity);
-        TrailRenderer trailRenderer = trailInstance.GetComponent<TrailRenderer>();
+        float trailSpeed = 200f; 
+        float distance = Vector3.Distance(origin, endPoint);
+        float duration = distance / trailSpeed;
 
-        // Inicia la Coroutine para mover el objeto a lo largo de la trayectoria del raycast
-        StartCoroutine(MoveTrail(trailInstance, endPoint, 0.5f));
-        Debug.DrawRay(origin, direction * range,Color.red,500);
+        StartCoroutine(MoveTrail(trailInstance, endPoint, duration));
     }
     [Server]
     private IEnumerator MoveTrail(GameObject trailInstance, Vector3 targetPosition, float duration)
