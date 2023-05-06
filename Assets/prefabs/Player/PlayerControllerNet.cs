@@ -46,6 +46,7 @@ public class PlayerControllerNet : NetworkBehaviour
    // private PlayerUIController playerUIController;
     private void Start()
     {
+        transform.position = new Vector3(4, 4, 66);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         controller = gameObject.GetComponent<CharacterController>();

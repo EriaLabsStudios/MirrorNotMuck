@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public static Action shootInputDown;
-    public static Action shootInputUp;
+    public static Action singleShootInput;
+    public static Action autoShootInput;
     public static Action reloadInput;
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
     [SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
@@ -15,8 +15,8 @@ public class PlayerShoot : MonoBehaviour
    
     void Update()
     {
-        if(Input.GetKeyDown(shootKey)) shootInputDown?.Invoke();
-        if (Input.GetKeyUp(shootKey)) shootInputUp?.Invoke();
-        if (Input.GetKeyDown(reloadKey)) reloadInput?.Invoke();
+        if(Input.GetKeyDown(shootKey)) singleShootInput?.Invoke();
+        if(Input.GetKey(shootKey)) autoShootInput?.Invoke();
+        if(Input.GetKeyDown(reloadKey)) reloadInput?.Invoke();
     }
 }
