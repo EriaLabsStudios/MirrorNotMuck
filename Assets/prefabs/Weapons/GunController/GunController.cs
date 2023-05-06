@@ -77,7 +77,7 @@ public class GunController : NetworkBehaviour, IGunController
 
     public bool CanShoot()
     {
-        Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwned {isOwned} isEquiped {isEquiped}");
+      //  Debug.Log($"[CanShoot] reloading {reloading} and timeSinceLastShoot {timeSinceLastShoot} isOwned {isOwned} isEquiped {isEquiped}");
         return !reloading && timeSinceLastShoot > 1f / (fireRate / 60) && isEquiped;
     }
 

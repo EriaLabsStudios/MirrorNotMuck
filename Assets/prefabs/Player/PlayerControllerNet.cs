@@ -35,6 +35,8 @@ public class PlayerControllerNet : NetworkBehaviour
 
     private bool isSliding = false;
     private Vector3 slidingDir = Vector3.zero;
+    private float slidingTime = 0;
+    private float maxSlidingTime = 1;
 
 
     GameController gameController;
@@ -117,18 +119,27 @@ public class PlayerControllerNet : NetworkBehaviour
     private void HandleSliding(Vector3 direction)
     {
 
-
-        if (Input.GetKey(KeyCode.LeftControl) && !isSliding && controller.isGrounded && direction.magnitude > 0)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !isSliding && controller.isGrounded && direction.magnitude > 0)
         {
             cameraHolder.transform.position -= new Vector3(0, 0.5f, 0);
             isSliding = true;
             slidingDir = direction.normalized;
             velocity += direction.normalized * slideSpeed * Time.deltaTime;
+            slidingTime = Time.timeSinceLevelLoad + maxSlidingTime;
         }
+        Debug.Log("[SlidingTIME ] " + slidingTime + " Time " + Time.timeSinceLevelLoad);
+
+         
 
         if (isSliding)
         {
             velocity += slidingDir * slideSpeed * Time.deltaTime;
+            if (Time.timeSinceLevelLoad > slidingTime )
+            {
+                isSliding = false;
+                cameraHolder.transform.position += new Vector3(0, 0.5f, 0);
+            }
+
         }
     }
 
